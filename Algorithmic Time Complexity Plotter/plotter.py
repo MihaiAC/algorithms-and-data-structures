@@ -20,29 +20,3 @@ class Plotter:
         #Plot the graph:
         pyplot.plot(x,y)
         pyplot.show()
-
-def gen(lst):
-    lst.append(random.randint(1,1000))
-    return lst
-
-#Selection sort:
-def func(lst):
-    for i in range(0,len(lst) - 1):
-        minim = i
-        for j in range(i+1,len(lst) - 1):
-            if(lst[j] < lst[minim]):
-                minim = j
-        if(minim != i):
-            aux = lst[i]
-            lst[i] = lst[minim]
-            lst[minim] = aux
-    
-
-
-
-
-def main():
-    Plotter.plotter(func,gen,100)
-
-if __name__ == '__main__':
-    main()
