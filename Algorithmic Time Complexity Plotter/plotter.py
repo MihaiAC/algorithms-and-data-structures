@@ -3,22 +3,23 @@ from functools import partial
 import timeit
 import random
 
-#pyplot.plot(x,y)
-#pyplot.show()
-#generator = generates a list of arguments of size i for function func
-#func = function of which the runtime will be measured
-def plotter(func,generator,n):
-    x = []
-    y = []
-    argss = []
-    for i in range(1,n):
-        argss = generator(argss)
-        x.append(i)
-        y.append(timeit.timeit(partial(func,argss)))
+class Plotter:
+    #generator = generates a list of appropiate arguments for the function, based on the previous list of arguments
+    #func = function of which the runtime will be measured
+    #n = number of plot points (executions of function func)
+    def plotter(func,generator,n):
+        x = range(1,n)
+        y = []
+        argss = []
+        for i in x:
+            argss = generator(argss)
+            #By increasing "number", the plot gets smoother, but takes longer to generate.
+            #"number" = number of times the timing is repeated.
+            y.append(timeit.timeit(partial(func,argss), number = 20))
     
-    #Plot the graph:
-    pyplot.plot(x,y)
-    pyplot.show()
+        #Plot the graph:
+        pyplot.plot(x,y)
+        pyplot.show()
 
 def gen(lst):
     lst.append(random.randint(1,1000))
@@ -41,7 +42,7 @@ def func(lst):
 
 
 def main():
-    plotter(func,gen,25)
+    Plotter.plotter(func,gen,100)
 
 if __name__ == '__main__':
     main()
