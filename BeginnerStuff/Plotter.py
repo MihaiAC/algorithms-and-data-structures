@@ -1,7 +1,7 @@
 from matplotlib import pyplot
 from functools import partial
 import timeit
-
+#Want to figure out how committing works.
 @staticmethod
 class Plotter:
     #generator = generates a list of appropiate arguments for the function, based on the previous list of arguments
