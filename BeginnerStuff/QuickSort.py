@@ -1,3 +1,6 @@
+from FindMedian import findMedian
+import random
+
 class QuickSort(object):
     
     @staticmethod
@@ -13,7 +16,8 @@ class QuickSort(object):
 
     @staticmethod
     def partition(i,j,array,compare):
-        pivot = array[i]
+        pivot = findMedian(array[i:j])
+        print(pivot)
         p = i
         q = j
         while(True):
@@ -37,6 +41,6 @@ def compare(a,b):
         return 1
 
 if __name__ == '__main__':
-    x = [4,8,2,6,1,10]
-    QuickSort.quickSort(x,compare)
-    print(x)
+    arr = random.sample(range(1,1000),100)
+    QuickSort.partition(0,len(arr) - 1,arr,compare)
+    print(arr)
