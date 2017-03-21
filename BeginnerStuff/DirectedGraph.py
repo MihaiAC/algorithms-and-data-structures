@@ -1,3 +1,6 @@
+from Queue import Queue
+from Stack import Stack
+
 class DirectedGraph:
     #Creates a graph from the provided list of tuples.
     def __init__(self,tupleList = None):
@@ -15,6 +18,16 @@ class DirectedGraph:
         self.addVertex(edge[0])
         if(edge[1] not in self.__dict[edge[0]]):
             self.__dict[edge[0]].append(edge[1])
+
+    #Incomplete method, must figure out how to extract all vertices from the graph.
+    #Make a method to do so.
+    @staticmethod
+    def bfs(graph):
+        visited = []
+        q = Queue()
+        for key in graph.__dict.keys():
+            if(key not in visited):
+
     
     #Prints the graph:
     def printGraph(self):
