@@ -5,28 +5,43 @@ class DirectedGraph:
     #Creates a graph from the provided list of tuples.
     def __init__(self,tupleList = None):
         self.__dict = {}
+        self.__vertexSet = set()
         if(tupleList != None):
             for (fst,snd) in tupleList:
-                self.addVertex(fst)
                 self.addEdge((fst,snd))
     
-    def addVertex(self,vertex):
-        if(self.__dict.get(vertex,True)):
-            self.__dict[vertex] = []
-    
+    #Using set here implies that there cannot be two edges between the same two points.
     def addEdge(self,edge):
-        self.addVertex(edge[0])
-        if(edge[1] not in self.__dict[edge[0]]):
-            self.__dict[edge[0]].append(edge[1])
-
-    #Incomplete method, must figure out how to extract all vertices from the graph.
-    #Make a method to do so.
+        if(edge[0] not in self.__dict.keys()):
+            self.__dict[edge[0]] = set()
+            self.__dict[edge[0]].add(edge[1])
+            self.__vertexSet.add(edge[0])
+            self.__vertexSet.add(edge[1])
+        else:
+            self.__dict[edge[0]].add(edge[1])
+            self.__vertexSet.add(edge[1])
+    
     @staticmethod
     def bfs(graph):
-        visited = []
-        q = Queue()
+        visited = set()
         for key in graph.__dict.keys():
             if(key not in visited):
+                DirectedGraph.bfsFromVertex(graph,key,visited)
+    
+    @staticmethod
+    def bfsFromVertex(graph,val,visited):
+        visited.add(val)
+        print(val)
+        q = Queue()
+        q.enqueue(val)
+        while(not q.isEmpty()):
+            v = q.dequeue()
+            if(v in graph.__dict.keys()):
+                for adjV in graph.__dict[v]:
+                    if(adjV not in visited):
+                        print(adjV)
+                        visited.add(adjV)
+                        q.enqueue(adjV)
 
     
     #Prints the graph:
@@ -36,4 +51,5 @@ class DirectedGraph:
 
 if __name__ == '__main__':
     g = DirectedGraph([(1,2),(2,3),(3,4),(1,2)])
+    DirectedGraph.bfs(g)
     g.printGraph()
