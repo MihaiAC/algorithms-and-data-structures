@@ -8,6 +8,7 @@ Graph - Directed (Python)
 Heap - Max (Python)  
 Queue (Python)  
 Stack (Python)  
+Trie (Java)
   
 Sorts:  
 Heap Sort (Python)  
