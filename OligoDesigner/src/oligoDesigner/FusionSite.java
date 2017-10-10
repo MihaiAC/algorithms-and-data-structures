@@ -178,7 +178,6 @@ public class FusionSite {
         int maxFusionSites = (seqLen-partMinLen*2)/partMinLen; //if both the front and the end count as fusion sites; //int maxFusionSites = (length-40)/40; //otherwise - (only front counts as fusion site);
         
         for(int i=1; i<=maxFusionSites; i++) {
-            System.out.println(i);
             if(generateAndCheckFS(i)) {
                 return possSOL;
             }
@@ -191,13 +190,13 @@ public class FusionSite {
     public static int letterToInt(char c) {
         switch(c) {
         case 'A':
-            return 0;
-        case 'C':
             return 1;
-        case 'G':
+        case 'C':
             return 2;
-        case 'T':
+        case 'G':
             return 3;
+        case 'T':
+            return 4;
         default:
             return -1;
         }
@@ -207,13 +206,13 @@ public class FusionSite {
     public static int inverseLetterToInt(char c) {
         switch(c) {
         case 'A':
-            return 3;
+            return 4;
         case 'C':
-            return 2;
+            return 3;
         case 'G':
-            return 1;
+            return 2;
         case 'T':
-            return 0;
+            return 1;
         default:
             return -1;
         }
@@ -249,7 +248,7 @@ public class FusionSite {
         String[] strArr = {fusion1FOR,fusion2};
         
         int[] aux = FusionSitesToInts(strArr);
-        System.out.println(java.util.Arrays.toString(aux));
+        //System.out.println(java.util.Arrays.toString(aux));
         System.out.println(fusion1FOR);
         System.out.println(fusion2);
         String[] stringify = {"A","C","G","T"};
@@ -305,7 +304,6 @@ public class FusionSite {
                 }
             }
         }
-        System.out.println(hm.toString());
         return hm;
     }
     
@@ -319,6 +317,15 @@ public class FusionSite {
         case('G'): return 'C';
         default: return ' ';
         }
+    }
+    
+    public static String reverseComplement(String s) {
+        char[] revCompl = new char[s.length()];
+        for(int i=s.length()-1; i>=0; i--) {
+            revCompl[s.length()-1-i] = complement(s.charAt(i));
+        }
+        String revComp = new String(revCompl);
+        return revComp;
     }
     
     //Helper function for generateConstraintGraph.
@@ -345,27 +352,23 @@ public class FusionSite {
         HashMap<String,HashSet<String>> hm = new HashMap<>();
         HashSet<String> aux3;
         String aux1,aux2;
+        
+        for(int i=0;i<len;i++) {
+            aux1 = aL.get(i);
+            if(!hm.containsKey(aux1)) {
+                aux3 = new HashSet<String>();
+                aux3.add(aux1);
+                hm.put(aux1,aux3);
+            }
+        }
+        
         for(int i=0; i<len-1; i++) {
             for(int j=i+1; j<len; j++) {
                 aux1 = aL.get(i);
                 aux2 = aL.get(j);
                 if(!isCombinationAllowed(aux1,aux2)) {
-                    if(hm.containsKey(aux1)) {
-                        hm.get(aux1).add(aux2);
-                    }
-                    else {
-                        aux3 = new HashSet<String>();
-                        aux3.add(aux2);
-                        hm.put(aux1,aux3);
-                    }
-                    if(hm.containsKey(aux2)) {
-                        hm.get(aux2).add(aux1);
-                    }
-                    else {
-                        aux3 = new HashSet<String>();
-                        aux3.add(aux1);
-                        hm.put(aux2,aux3);
-                    }
+                    hm.get(aux1).add(aux2);
+                    hm.get(aux2).add(aux1);
                 }
             }
         }

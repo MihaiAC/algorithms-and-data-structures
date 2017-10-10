@@ -60,7 +60,7 @@ public class Findmaxr {
         while(initial < len && LCP[I[initial]] < ml) {
             initial++;
         }
-        System.out.println("Initial is "+ Arrays.toString(I));
+        //System.out.println("Initial is "+ Arrays.toString(I));
         for(int t=initial; t<len; t++) {
             int i = I[t];
             int pi = FmxrNode.maxLessThan(aL,i+1); //MAY BE +2 or +0!!!
