@@ -52,13 +52,20 @@ class Solution:
         print("")
         self.map[cx][cy] = aux
     
-    # Trivial but inefficient solution.
+    # Slight improvement: only consider coords on the normal route for 
+    # obstacle placement.
     def calculate_n_obstacles(self) -> int:
         n_obstacles = 0
         map_original = deepcopy(self.map)
+        
+        # We know that the initial input is not a loop, but just in case.
+        if self.is_loop():
+            return -1
+        
+        normal_route = deepcopy(self.map)
         for ii in tqdm(range(self.nrows)):
             for jj in tqdm(range(self.ncols)):
-                if map_original[ii][jj] == '.' and (ii != self.x_start or jj != self.y_start):
+                if normal_route[ii][jj] == 'X' and (ii != self.x_start or jj != self.y_start):
                     self.map = deepcopy(map_original)
                     self.map[ii][jj] = '#'
                     if self.is_loop():
