@@ -4,6 +4,12 @@ from tqdm import tqdm
 
 class Solution:
     def __init__(self, input_file: str):
+        self.initialise_map(input_file)
+        self.initialise_constants()
+        self.initialise_start()
+
+    
+    def initialise_map(self, input_file: str):
         self.map = []
         with open(input_file) as f:
             for line in f:
@@ -12,18 +18,23 @@ class Solution:
         self.nrows = len(self.map)
         self.ncols = len(self.map[0])
     
+    def initialise_constants(self):
         self.MARK_TO_DIR = {'>': (0,1),
                             'v': (1,0),
                             '<': (0,-1),
                             '^': (-1,0)}
+        
         self.DIR_TO_MARK = {(0,1): '>',
                             (1,0): 'v',
                             (0,-1): '<',
                             (-1,0): '^'}
+        
         self.MARKS = {'>','<','^','v'}
+        
         self.ROTATE = {(0,1): (1,0), (1,0): (0,-1), (0,-1): (-1,0), (-1,0): (0,1)}
 
-        # Find start position and initial direction:
+    # Find start position and initial direction.
+    def initialise_start(self):
         for ii in range(self.nrows):
             for jj in range(self.ncols):
                 if self.map[ii][jj] in self.MARKS:
