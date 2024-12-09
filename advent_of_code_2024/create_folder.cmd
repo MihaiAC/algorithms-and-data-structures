@@ -8,8 +8,7 @@ mkdir %day_n%
 cd %day_n%
 copy NUL p1.py
 copy NUL p2.py
-copy NUL input1
-copy NUL input2
-copy NUL test1
-copy NUL test2
+copy NUL input
+copy NUL test
+
 cd ..
