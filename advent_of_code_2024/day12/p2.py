@@ -3,11 +3,8 @@ from typing import Tuple
 
 class Solution:
     def __init__(self, input_file: str):
-        self.matrix = []
         with open(input_file) as f:
-            for line in f:
-                if line != '\n':
-                    self.matrix.append(line[:-1])
+            self.matrix = f.read().strip().split('\n')
         self.M, self.N = len(self.matrix), len(self.matrix[0])
 
         self.DELTAS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -38,9 +35,7 @@ class Solution:
                 dx, dy = window[2]
                 if self.matrix[cx+dx][cy+dy] != current_letter:
                     corner_count += 1
-            elif same_letter_count == 0 and out_of_bounds_count == 0:
-                corner_count += 1
-            elif same_letter_count == 0 and out_of_bounds_count == 1:
+            elif same_letter_count == 0 and out_of_bounds_count in [0, 1]:
                 corner_count += 1
             elif out_of_bounds_count == 2:
                 corner_count += 1
@@ -62,15 +57,21 @@ class Solution:
                     
                     queue = deque([(ii, jj)])
 
+                    # BFS.
                     while len(queue) > 0:
                         cx, cy = queue.pop()
                         current_area += 1
+                        
+                        # Number of sides = number of corners.
                         current_sides += self.count_corners((cx, cy))
+                        
                         for dx, dy in self.DELTAS:
                             if self.within_bounds(cx+dx, cy+dy) and self.matrix[cx+dx][cy+dy] == current_letter and visited[cx+dx][cy+dy] == 0:
                                 visited[cx+dx][cy+dy] = 1
                                 queue.appendleft((cx+dx, cy+dy))
+                    
                     total_price += current_area * current_sides        
+        
         return total_price
 
 
