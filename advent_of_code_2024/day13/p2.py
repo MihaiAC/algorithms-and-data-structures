@@ -1,5 +1,5 @@
 import re
-import scipy
+import pulp
 import numpy as np
 from typing import Tuple
 
@@ -42,18 +42,22 @@ class Solution:
             else:
                 return 0
         elif detA == 0 or detB == 0:
-            min_objective_func = lambda x: 3*x[0] + x[1]
-            integer_constraint_func = lambda x: sum([(val-int(val))**2 for val in x])
-            linear_constraint = scipy.optimize.LinearConstraint(A=np.array([xA, xB]), lb=xres, ub=xres)
-            nonlinear_constraint = scipy.optimize.NonlinearConstraint(fun=integer_constraint_func, lb=1, ub=1)
-            bounds = scipy.optimize.Bounds(lb=0)
-            res = scipy.optimize.minimize(min_objective_func, np.array([0, 0]), bounds=bounds, 
-                                                                                constraints=[linear_constraint, nonlinear_constraint],
-                                                                                options={'maxiter': 100})
-            
-            print(res)
-            return 0
+            optimization_problem = pulp.LpProblem("Minimize cost", pulp.LpMinimize)
+            npA = pulp.LpVariable("npA", lowBound=0, cat="Integer")
+            npB = pulp.LpVariable("npB", lowBound=0, cat="Integer")
+
+            optimization_problem += 3*npA + npB, "Minimization objective"
+            optimization_problem += yA * npA + yB * npB == yres, "Linear constraint"
+
+            optimization_problem.solve()
+
+            if optimization_problem.status == pulp.LpStatusOptimal:
+                return 3*int(pulp.value(npA)) + int(pulp.value(npB))
+            else:
+                print("No feasible solution found.")
+                return 0
         else:
+            # System has no solution.
             return 0
     
     def calculate_min_tokens_needed(self) -> int:
