@@ -25,10 +25,10 @@ class Solution:
         }
         
         self.plot = plot
-
         if self.plot:
             # Init tkinter grid.
             self.init_tkinter()
+            time.sleep(3)
     
     def double_map(self):
         for row_idx, row in enumerate(self.matrix):
@@ -82,12 +82,14 @@ class Solution:
                     score += 100*ii+jj
         return score
     
-    # cx, cy corresponds to the left side of the box '['.
+    # cx, cy corresponds to the left side of the box, meaning '['.
     def is_possible_move_box_vert(self, cx: int, cy: int, delta: Tuple[int, int]) -> bool:
-        rscx, rscy = cx, cy+1
         dx, dy = delta
-        rsnx, rsny = rscx+dx, rscy+dy
+
         nx, ny = cx+dx, cy+dy
+
+        rscx, rscy = cx, cy+1
+        rsnx, rsny = rscx+dx, rscy+dy
 
         if self.matrix[nx][ny] == '#' or self.matrix[rsnx][rsny] == '#':
             return False
@@ -108,11 +110,13 @@ class Solution:
    
     # Called when we know the box can eventually be moved.
     def move_box_vert(self, cx: int, cy: int, delta: Tuple[int, int]):
-        rscx, rscy = cx, cy+1
         dx, dy = delta
-        rsnx, rsny = rscx+dx, rscy+dy
+
         nx, ny = cx+dx, cy+dy
 
+        rscx, rscy = cx, cy+1
+        rsnx, rsny = rscx+dx, rscy+dy
+        
         # First, move the boxes that are on top of the current box.
         if self.matrix[nx][ny] == '[':
             self.move_box_vert(nx, ny, delta)
@@ -130,7 +134,6 @@ class Solution:
 
     
     def move_box_vert_if_possible(self, cx: int, cy: int, delta: Tuple[int, int]) -> bool:
-        self.cache = dict()
         if self.is_possible_move_box_vert(cx, cy, delta):
             self.move_box_vert(cx, cy, delta)
             return True
@@ -138,23 +141,25 @@ class Solution:
 
     
     def move_box_horiz_if_possible(self, cx: int, cy: int, delta: Tuple[int, int]) -> bool:
-        ix, iy = cx, cy
-        dx, dy = delta
+        iy = cy
+        dy = delta[1]
         
-        while self.matrix[ix][iy] not in ['.', '#']:
-            ix += dx
+        while self.matrix[cx][iy] not in ['.', '#']:
             iy += dy
         
-        if self.matrix[ix][iy] == '#':
+        if self.matrix[cx][iy] == '#':
             return False
         else:
-            dx, dy = -dx, -dy
             while iy != cy:
-                ny = iy+dy
+                ny = iy-dy
                 # self.matrix[ix][iy] = self.matrix[ix][ny]
-                self.update_cell(ix, iy, self.matrix[ix][ny])
+                self.update_cell(cx, iy, self.matrix[cx][ny])
                 iy = ny
-            self.matrix[cx][cy] = '.'
+            
+            if dy < 0:
+                self.update_cell(cx, cy, ']')
+            else:
+                self.update_cell(cx, cy, '.')
             return True
     
 
@@ -177,7 +182,6 @@ class Solution:
                     self.update_cell(cx, cy, '.')
                     return (nx, ny)
                 elif self.matrix[nx][ny] == ']' and self.move_box_horiz_if_possible(nx, ny-1, delta):
-                    self.update_cell(nx, ny-1, ']')
                     self.update_cell(nx, ny, '@')
                     self.update_cell(cx, cy, '.')
                     return (nx, ny)
@@ -195,25 +199,23 @@ class Solution:
         cx, cy = self.find_starting_pos()
         for move_row in self.moves:
             for move in move_row:
+                nx, ny = self.make_move_return_new_pos(cx, cy, self.DELTAS[move])
                 if self.plot:
-                    nx, ny = self.make_move_return_new_pos(cx, cy, self.DELTAS[move])
-                    if self.plot:
-                        if cx == nx and cy == ny:
-                            self.update_cell(cx, cy, move)
-                            self.root.update()
-                            time.sleep(0.7)
-                            self.update_cell(cx, cy, '@')
+                    if cx == nx and cy == ny:
+                        self.update_cell(cx, cy, move)
                         self.root.update()
-                        time.sleep(0.3)
-                    cx, cy = nx, ny
+                        time.sleep(1)
+                        self.update_cell(cx, cy, '@')
+                    self.root.update()
+                    time.sleep(0.2)
+                cx, cy = nx, ny
 
 
 if __name__ == '__main__':
-    sol = Solution('input', True)
+    sol = Solution('input', False)
     sol.move_boxes()
     print(sol.calculate_score())
     
     if sol.plot:
         sol.root.destroy()
     
-    print(sol.matrix)

@@ -104,16 +104,15 @@ class Solution:
         cx, cy = self.find_starting_pos()
         for move_row in self.moves:
             for move in move_row:
+                cx, cy = self.make_move_return_new_pos(cx, cy, self.DELTAS[move])
+                # print(f"{cx, cy}")
                 if self.plot:
-                    cx, cy = self.make_move_return_new_pos(cx, cy, self.DELTAS[move])
-                    # print(f"{cx, cy}")
-                    if self.plot:
-                        self.root.update()
-                        time.sleep(0.01)
+                    self.root.update()
+                    time.sleep(0.01)
 
 
 if __name__ == '__main__':
-    sol = Solution('input', True)
+    sol = Solution('input', False)
     sol.move_boxes()
     print(sol.calculate_score())
     
