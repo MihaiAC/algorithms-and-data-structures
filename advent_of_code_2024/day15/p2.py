@@ -15,6 +15,7 @@ class Solution:
         self.ncols = len(self.matrix[0])
 
         self.moves = input_lines[sep_idx+1:]
+        self.total_moves = sum([len(line) for line in self.moves])
 
         # Map move symbols to corresponding movement.
         self.DELTAS = {
@@ -60,6 +61,10 @@ class Solution:
                 label.grid(row=row_idx, column=col_idx, padx=1, pady=1)
                 label_row.append(label)
             self.labels.append(label_row)
+        
+        self.footer_counter = tk.Label(self.root, text="Moves: 0/" + str(self.total_moves), font=("Helvetica", 14), bg="black", fg="white")
+        self.footer_counter.grid(row=self.nrows, column=0, columnspan=self.ncols, pady=(10, 0)) 
+
     
     def find_starting_pos(self) -> Tuple[int, int]:
         for row_idx in range(self.nrows):
@@ -197,22 +202,25 @@ class Solution:
 
     def move_boxes(self):
         cx, cy = self.find_starting_pos()
+        move_counter = 0
         for move_row in self.moves:
             for move in move_row:
+                move_counter += 1
+                self.footer_counter.config(text="Moves: " + str(move_counter) + '/' + str(self.total_moves))
                 nx, ny = self.make_move_return_new_pos(cx, cy, self.DELTAS[move])
                 if self.plot:
                     if cx == nx and cy == ny:
                         self.update_cell(cx, cy, move)
                         self.root.update()
-                        time.sleep(1)
+                        time.sleep(0.01)
                         self.update_cell(cx, cy, '@')
                     self.root.update()
-                    time.sleep(0.2)
+                    time.sleep(0.005)
                 cx, cy = nx, ny
 
 
 if __name__ == '__main__':
-    sol = Solution('input', False)
+    sol = Solution('input', True)
     sol.move_boxes()
     print(sol.calculate_score())
     
