@@ -60,6 +60,9 @@ class Solution:
         return ",".join(out)
     
     def reverse(self) -> Set[int]:
+        # Input-dependent expression, constructed by hand.
+        # Could have done something smarter, since only the last 3 bits of X matter, 
+        # but it worked so that's good enough.
         bxcout = lambda X: ((X%8)^floor(X/2**(7-X%8)))%8
         curr_poss = set([7])
         for idx in range(len(self.instructions)-2, -1, -1):
