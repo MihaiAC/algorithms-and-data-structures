@@ -9,7 +9,6 @@ class Solution:
         
         self.NUMPAD_SCHEMA = self.precompute_shortest_route(self.NUMPAD, self.NUMPAD_AVOID)
         self.DIRECTIONAL_SCHEMA = self.precompute_shortest_route(self.DIRECTIONAL, self.DIRECTIONAL_AVOID)
-        # self.DIRECTIONAL_SCHEMA[('A', 'v')] = ['v<A']
     
     def init_constants(self):
         self.DELTA_TO_SYM = {
@@ -60,7 +59,25 @@ class Solution:
                         if dx == 0 or dy == 0:
                             route = self.DELTA_TO_SYM[(self.SIGN(dx), 0)] * abs(dx) + self.DELTA_TO_SYM[(0, self.SIGN(dy))] * abs(dy) + 'A'
                         else:
-                            # Some shortcut rules.
+                            '''
+                                Obviously, we want to minimize the changes in directions.
+                                We can reach any cell from any other cell with a maximum of 1 direction change.
+                                (
+                                ii, ll) == avoid or (kk, jj) == avoid => only one path that doesn't pass through the free space;
+
+                                Shortcut rules:
+                                Expansion length (cost function): Moves (order interchangeable)
+                                2: (v, ^), (v, <), (v, >), (^, A), (>, A)
+                                3: (<, ^), (v, A), (>, ^), (<, >)
+                                4: (<, A)
+
+                                Based on these, let's consider the nontrivial (dx > 0 and dy > 0) cases when choosing the transitions.
+                                Moving top left: moving left then up (<^) vs moving up then left (^<): we prefer <^, since ^< will end with <A which has a maximum cost of 4
+                                Moving bottom left: v< (cost 4) vs <v (cost 3) we prefer <v for the same reasoning as above
+                                Moving bottom right: v> (cost 2) vs >v (3)
+                                Moving top right: ^> (cost 2) vs >^ (cost 2) => tiebreaker; ending in ">" is preferrable, since it's on the same line with two other buttons.
+                            '''
+
                             if (ii, ll) != avoid and (kk, jj) != avoid:
                                 if ll < jj:
                                     # move alongside row first, then alongside column
@@ -69,9 +86,7 @@ class Solution:
                                     # move down the column then right
                                     route = move_alongside_col(dx) + move_alongside_row(dy) + 'A'
                                 else:
-                                    # order doesn't matter (?) or I haven't figured out a rule for this yet
-                                    route = move_alongside_col(dx) + move_alongside_row(dy) + 'A'
-                                    # curr_combos.append(move_alongside_row(dy) + move_alongside_col(dx) + 'A')   
+                                    route = move_alongside_col(dx) + move_alongside_row(dy) + 'A' 
                             elif (ii, ll) != avoid:
                                 route = move_alongside_row(dy) + move_alongside_col(dx) + 'A'
                             elif (kk, jj) != avoid:
@@ -99,7 +114,6 @@ class Solution:
                 final_code_len += self.expand_return_code_len(self.expand_code(self.DIRECTIONAL_SCHEMA, 'A' + mini_code + 'A'), repeats-1)
             return final_code_len
         else:
-            print("This should be unreachable.")
             raise ValueError(f'expand_return_code_len: A not in code {code}')
         
     
@@ -117,13 +131,6 @@ class Solution:
     
 if __name__ == '__main__':
     sol = Solution('input')
-    print(sol.calculate_complexity(2))
-    # print(sol.NUMPAD_SHORTEST_COMBOS)
-    # print(sol.NUMPAD_SHORTEST_COMBOS['2', '7'])
-    # print(sol.NUMPAD_SHORTEST_COMBOS['5', '1'])
-    # print(sol.NUMPAD_SHORTEST_COMBOS['5', '3'])
-    # print(sol.NUMPAD_SHORTEST_COMBOS['5', '9'])
-    
-    # print(sol.DIRECTIONAL_SHORTEST_COMBOS['A', 'v'])
+    print(sol.calculate_complexity(25))
     
 

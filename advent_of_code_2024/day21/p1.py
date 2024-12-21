@@ -1,5 +1,4 @@
 from typing import Dict, Tuple, List
-from collections import defaultdict
 
 class Solution:
     def __init__(self, input_file: str):
@@ -55,19 +54,16 @@ class Solution:
                             curr_combos.append(self.DELTA_TO_SYM[(self.SIGN(dx), 0)] * abs(dx) + self.DELTA_TO_SYM[(0, self.SIGN(dy))] * abs(dy) + 'A')
                         else:
                             if (ii, ll) != avoid:
-                                # dy first then dx, moving from (ii, jj) to (kk, ll)
                                 curr_combos.append(self.DELTA_TO_SYM[(0, self.SIGN(dy))] * abs(dy) + self.DELTA_TO_SYM[(self.SIGN(dx), 0)] * abs(dx) + 'A')
 
 
                             if (kk, jj) != avoid:
-                                # dx first then dy, moving from (ii, jj) to (kk, ll)
                                 curr_combos.append(self.DELTA_TO_SYM[(self.SIGN(dx), 0)] * abs(dx) + self.DELTA_TO_SYM[(0, self.SIGN(dy))] * abs(dy) + 'A')
                         
                         combos[(matrix[ii][jj], matrix[kk][ll])] = curr_combos
         
         return combos
     
-    # TODO: improve code by dynamically calculating min_len?
     def code_to_minimal_length_combos(self, combo_schema: Dict[Tuple[str, str], List[str]], equivalent_codes: List[str]) -> List[str]:
         final_combos = []
         for code in equivalent_codes:
@@ -87,11 +83,8 @@ class Solution:
     
     def get_final_combos(self, code: str) -> List[str]:
         first_robot_codes = self.code_to_minimal_length_combos(self.NUMPAD_SHORTEST_COMBOS, [code])
-        print(len(first_robot_codes))
         second_robot_codes = self.code_to_minimal_length_combos(self.DIRECTIONAL_SHORTEST_COMBOS, first_robot_codes)
-        print(len(second_robot_codes))
         third_codes = self.code_to_minimal_length_combos(self.DIRECTIONAL_SHORTEST_COMBOS, second_robot_codes)
-        print(len(third_codes))
         return third_codes
 
     def calculate_complexity(self) -> int:
