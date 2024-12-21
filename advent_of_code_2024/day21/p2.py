@@ -1,5 +1,6 @@
 from typing import Dict, Tuple, List
-from collections import defaultdict
+from functools import cache
+from tqdm import tqdm
 
 class Solution:
     def __init__(self, input_file: str):
@@ -81,18 +82,30 @@ class Solution:
         return routes
     
     def expand_code(self, combo_schema: Dict[Tuple[str, str], str], code: str) -> str:
-        code = 'A' + code
         new_code = []
         for idx in range(len(code)-1):
             transition = (code[idx], code[idx+1])
             new_code.append(combo_schema[transition])
         return "".join(new_code)
+
+    @cache
+    def expand_return_code_len(self, code: str, repeats: int) -> int:
+        if repeats == 0:
+            return len(code)
+        if 'A' in code:
+            mini_codes = code.split('A')[:-1]
+            final_code_len = 0
+            for mini_code in mini_codes:
+                final_code_len += self.expand_return_code_len(self.expand_code(self.DIRECTIONAL_SCHEMA, 'A' + mini_code + 'A'), repeats-1)
+            return final_code_len
+        else:
+            print("This should be unreachable.")
+            raise ValueError(f'expand_return_code_len: A not in code {code}')
+        
     
     def calculate_final_code_len(self, code: str, repeats: int) -> int:
-        code = self.expand_code(self.NUMPAD_SCHEMA, code)
-        for _ in range(repeats):
-            code = self.expand_code(self.DIRECTIONAL_SCHEMA, code)
-        return len(code)
+        code = self.expand_code(self.NUMPAD_SCHEMA, 'A' + code)
+        return self.expand_return_code_len(code, repeats)
 
     def calculate_complexity(self, repeats: int) -> int:
         complexity = 0
@@ -104,7 +117,7 @@ class Solution:
     
 if __name__ == '__main__':
     sol = Solution('input')
-    print(sol.calculate_complexity(25))
+    print(sol.calculate_complexity(2))
     # print(sol.NUMPAD_SHORTEST_COMBOS)
     # print(sol.NUMPAD_SHORTEST_COMBOS['2', '7'])
     # print(sol.NUMPAD_SHORTEST_COMBOS['5', '1'])
