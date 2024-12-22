@@ -10,7 +10,7 @@ class Solution:
         if self.steps < 4:
             raise ValueError('Cannot have fewer than four steps.')
         
-        self.deltas_to_vals = defaultdict(list)
+        self.deltas_to_vals = defaultdict(int)
         str_inputs = open(input_file).read().strip().split('\n')
         self.nums = [int(x) for x in str_inputs]
 
@@ -40,18 +40,17 @@ class Solution:
                 local_deltas_to_vals[delta] = num4 % 10
         
         for delta, val in local_deltas_to_vals.items():
-            self.deltas_to_vals[delta].append(val)
+            self.deltas_to_vals[delta] += val
         return num
     
     def calc_optimal_delta_and_sum(self) -> int:
         optimal_delta = None
         max_sum = -1
         
-        for num in self.nums:
+        for num in tqdm(self.nums):
             self.expand_num_and_add_to_deltas(num)
         
-        for delta, vals_list in tqdm(self.deltas_to_vals.items()):
-            curr_sum = sum(vals_list)
+        for delta, curr_sum in tqdm(self.deltas_to_vals.items()):
             if curr_sum > max_sum:
                 max_sum = curr_sum
                 optimal_delta = delta
