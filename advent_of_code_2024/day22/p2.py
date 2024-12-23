@@ -55,6 +55,7 @@ class Solution:
                 max_sum = curr_sum
                 optimal_delta = delta
         
+        print(len(self.deltas_to_vals))
         print(optimal_delta)
         return max_sum
 
