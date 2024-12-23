@@ -1,20 +1,4 @@
-# Algorithms-Data-Structures-Misc
-"Simple JSON Reader" -> one-time JSON reader (could be adapted for more general usage).
+# Algorithms-and-Data-Structures
 
-"AlgorithmsAndDataStructs" -> algorithms and data structures.  
-Data Structures:  
-Doubly Linked List (Python)  
-Graph - Directed (Python)  
-Heap - Max (Python)  
-Queue (Python)  
-Stack (Python)  
-Trie (Java)
-  
-Sorts:  
-Heap Sort (Python)  
-Insertion Sort (Python)  
-Merge Sort (Python)  
-QuickSort (Python)  
-  
-Searches:  
-Find Median (Python)  
+Contains some practice ADS problems and implementations.
+Nowadays, I do most of my practice on [https://leetcode.com/u/MihaiAC/](Leetcode). 
