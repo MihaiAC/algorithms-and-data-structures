@@ -2,6 +2,8 @@ from typing import Tuple, Dict, List
 from functools import reduce
 from collections.abc import Callable
 from collections import defaultdict, deque
+from random import randint
+from tqdm import tqdm
 
 class Wire:
     def __init__(self, name: str, value: bool):
@@ -47,17 +49,11 @@ class Gate:
 
         if inp1.is_wire and inp2.is_wire:
             return True
-        elif self.operator_name == 'AND' and ((inp1.value == 0 and (inp1.is_wire or inp1.is_fixed())) or 
-                                              (inp2.value == 0 and (inp2.is_wire or inp2.is_fixed()))):
+        elif self.operator_name == 'AND' and ((inp1.value == 0 and inp1.is_wire) or 
+                                              (inp2.value == 0 and inp2.is_wire)):
             return True
-        elif self.operator_name == 'OR' and ((inp1.value == 1 and (inp1.is_wire or inp1.is_fixed())) or 
-                                             (inp2.value == 1 and (inp2.is_wire or inp2.is_fixed()))):
-            return True
-        elif inp1.is_wire and inp2.is_fixed():
-            return True
-        elif inp2.is_wire and inp1.is_fixed():
-            return True
-        elif inp1.is_gate and inp1.is_fixed() and inp2.is_gate and inp2.is_fixed():
+        elif self.operator_name == 'OR' and ((inp1.value == 1 and inp1.is_wire) or 
+                                             (inp2.value == 1 and inp2.is_wire)):
             return True
         return False
     
@@ -117,8 +113,9 @@ class Solution:
 
         # Gates whose output cannot be changed by switching one input.
         self.fixed_gates = self.calculate_fixed_gates()
-        print(x.name for x in self.fixed_gates)
-    
+        print(f"Fixed gates:\n {[gate.name for gate in self.fixed_gates]}")
+
+
     def is_wire(self, name: str) -> bool:
         return name[0] in ['x', 'y']
 
@@ -181,8 +178,47 @@ class Solution:
     def calculate_fixed_gates(self) -> List[Gate]:
         return [x for x in self.gates.values() if x.is_fixed()]
 
+    def propagate_print(self, gate: Gate) -> str:
+        inp1 = gate.inputs[0]
+        inp2 = gate.inputs[1]
+        
+        ret_str = '('
+        if inp1.is_wire:
+            ret_str += inp1.name + '(' + str(inp1.value) + ')'
+        else:
+            ret_str += self.propagate_print(inp1)
+        
+        ret_str += ' ' + gate.operator_name + ' '
+        
+        if inp2.is_wire:
+            ret_str += inp2.name + '(' + str(inp2.value) + ')'
+        else:
+            ret_str += self.propagate_print(inp1)
+        
+        ret_str += ')'
+        return ret_str
+     
+    def change_xy_until_mismatch(self):
+        incorrect_zs_names = []
+        for _ in tqdm(range(1000)):
+            for _, x_wire in self.x_wires.items():
+                x_wire.value = randint(0, 1)
+            for _, y_wire in self.y_wires.items():
+                y_wire.value = randint(0, 1)
+            
+            self.correct_zs = self.calculate_correct_zs()
+            
+            for name, gate in self.gates.items():
+                if name[0] == 'z':
+                    if gate.value != self.correct_zs[name]:
+                        incorrect_zs_names.append(name)
+            
+            if len(incorrect_zs_names) > 0:
+                print("Incorrect: ")
+                print(incorrect_zs_names)
+                break
 
 
 if __name__ == '__main__':
-    sol = Solution('test1')
-    print(sol.calculate_fixed_gates())
+    sol = Solution('input')
+    print(sol.change_xy_until_mismatch())
