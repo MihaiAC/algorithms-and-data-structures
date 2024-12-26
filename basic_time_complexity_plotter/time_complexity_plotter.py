@@ -3,6 +3,7 @@ import time
 import matplotlib.pyplot as plt
 from typing import Callable, Generator, List, Any
 from functools import partial
+from complexity_class_estimator import ComplexityEstimator
 
 class Plotter:
     """
@@ -53,7 +54,7 @@ class Plotter:
         # Generate + save the plot.
         plt.figure(figsize=(10, 10))
         plt.scatter(input_sizes, run_times, color='black')
-        plt.title('Time complexity for ' + self.func.__name__)
+        plt.title('Time complexity for ' + self.func.__name__ + '\nEstimated: ' + ComplexityEstimator.estimate_complexity(input_sizes, run_times))
         plt.xlabel('Input size')
         plt.ylabel('Time')
         plt.savefig(self.save_path + self.fig_name)

@@ -55,15 +55,16 @@ class ComplexityEstimator:
     def __init__(self):
         pass
 
-    def estimate_complexity(self, input_sizes: List[float], outputs: List[float]) -> str:
+    @staticmethod
+    def estimate_complexity(input_sizes: List[float], runtimes: List[float]) -> str:
         errors = dict()
         input_sizes = np.array(input_sizes)
-        outputs = np.array(outputs)
+        runtimes = np.array(runtimes)
         for compl_class, func in ComplexityEstimator.CLASSES.items():
             try:
-                params, _ = curve_fit(func, input_sizes, outputs)
+                params, _ = curve_fit(func, input_sizes, runtimes)
                 preds = func(input_sizes, *params)
-                mean_squared_error = np.mean((preds-outputs)**2)
+                mean_squared_error = np.mean((preds-runtimes)**2)
                 errors[compl_class] = mean_squared_error
             except Exception as e:
                 print(e)
