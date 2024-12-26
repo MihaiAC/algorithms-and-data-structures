@@ -1,9 +1,6 @@
 import numpy as np
 from scipy.optimize import curve_fit
 from typing import List
-# TODO: Return the fit function.
-# TODO: Implement the complexity estimator.
-# TODO: Show the estimated time complexity under the graph title.
 
 def constant_f(N: np.ndarray, a: float, b: float) -> float:
     return b
