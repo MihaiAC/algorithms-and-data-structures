@@ -1,3 +1,5 @@
+from typing import List
+
 class SegmentTree:
     def __init__(self, arr: List[int], min_elem: int):
         self.N = len(arr)
