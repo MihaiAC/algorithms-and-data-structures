@@ -3,13 +3,17 @@ from typing import List
 class Solution:
     def minTime(self, wizard_skill: List[int], mana_values: List[int]) -> int:
         N_wizards = len(wizard_skill)
-        earliest_avail = [0]*N_wizards
-        for mana in mana_values:
-            earliest_avail[0] += wizard_skill[0] * mana
-            for idx in range(1, N_wizards):
-                earliest_avail[idx] = max(earliest_avail[idx], earliest_avail[idx-1]) + wizard_skill[idx]*mana
+        N_potions = len(mana_values)
 
-            # Backpass.
-            for idx in range(N_wizards-2, -1, -1):
-                earliest_avail[idx] = earliest_avail[idx+1]-mana*wizard_skill[idx+1]
-        return earliest_avail[-1]
+        accum = [0]
+        for skill in wizard_skill:
+            accum.append(skill + accum[-1])
+        
+        time = 0
+        for mana_idx in range(1, N_potions):
+            max_diff = 0
+            for wizard_idx in range(N_wizards):
+                max_diff = max(max_diff, accum[wizard_idx+1] * mana_values[mana_idx-1] - accum[wizard_idx] * mana_values[mana_idx])
+            time += max_diff
+        
+        return time + accum[-1] * mana_values[-1]
