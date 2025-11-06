@@ -5,20 +5,27 @@ from collections import defaultdict
 class Solution:
     def processQueries(self, c: int, connections: List[List[int]], queries: List[List[int]]) -> List[int]:
         parent = dict()
+        size = dict()
 
         for v in range(1, c+1):
             parent[v] = v
+            size[v] = 1
         
         def find_root(v: int) -> int:
-            if (v == parent[v]):
-                return v
-            return find_root(parent[v])
+            if v != parent[v]:
+                parent[v] = find_root(parent[v])
+            return parent[v]
         
         def union(u: int, v: int):
             a = find_root(u)
             b = find_root(v)
-            if (a != b):
-                parent[b] = a
+            if a != b:
+                if size[a] < size[b]:
+                    parent[a] = b
+                    size[b] += size[a]
+                else:
+                    parent[b] = a
+                    size[a] += size[b]
         
         for u, v in connections:
             union(u, v)
