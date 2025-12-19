@@ -76,7 +76,7 @@ function p2(rotations: string[]): number {
 const getRotations = (fileName: string) =>
     fs.readFileSync(fileName, "utf-8").trim().split("\n");
 
-const exampleRotations = getRotations("d1-p1-example.txt");
+const exampleRotations = getRotations("d1-example.txt");
 assert.equal(p1(exampleRotations), 3);
 assert.equal(p2(exampleRotations), 6);
 
