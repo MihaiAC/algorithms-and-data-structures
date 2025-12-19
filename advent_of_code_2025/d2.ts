@@ -56,6 +56,6 @@ const getRanges = (fileName: string) =>
         .map((x) => x.split("-").map((y) => Number(y)));
 
 console.log(calculateSum(getRanges("d2-example.txt"), isInvalidP1));
-console.log(calculateSum(getRanges("d2-p1.txt"), isInvalidP1));
+console.log(calculateSum(getRanges("d2-input.txt"), isInvalidP1));
 console.log(calculateSum(getRanges("d2-example.txt"), isInvalidP2));
-console.log(calculateSum(getRanges("d2-p1.txt"), isInvalidP2));
+console.log(calculateSum(getRanges("d2-input.txt"), isInvalidP2));

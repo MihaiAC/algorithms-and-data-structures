@@ -80,6 +80,6 @@ const exampleRotations = getRotations("d1-example.txt");
 assert.equal(p1(exampleRotations), 3);
 assert.equal(p2(exampleRotations), 6);
 
-const p1Rotations = getRotations("d1-p1.txt");
+const p1Rotations = getRotations("d1-input.txt");
 console.log(p1(p1Rotations));
 console.log(p2(p1Rotations));
