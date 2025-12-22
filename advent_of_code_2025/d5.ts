@@ -60,7 +60,17 @@ function p1(intervals: Interval[], numbers: number[]): number {
     return freshCount;
 }
 
+function p2(intervals: Interval[]): number {
+    intervals = sortAndMergeIntervals(intervals);
+    return intervals.reduce(
+        (accum: number, curr: Interval) => accum + curr[1] - curr[0] + 1,
+        0
+    );
+}
+
 const [exampleIntervals, exampleNumbers] = readInput("d5-example.txt");
 const [inputIntervals, inputNumbers] = readInput("d5-input.txt");
 console.log(p1(exampleIntervals, exampleNumbers));
 console.log(p1(inputIntervals, inputNumbers));
+console.log(p2(exampleIntervals));
+console.log(p2(inputIntervals));
