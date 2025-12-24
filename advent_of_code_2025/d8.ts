@@ -23,7 +23,7 @@ function readInput(fileName: string): Point[] {
     return points;
 }
 
-function p1(points: Point[], limit: number): number {
+function solve(points: Point[], limit: number, p2: boolean = false): number {
     const calculateDist = (p1: Point, p2: Point): number => {
         return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2;
     };
@@ -58,12 +58,12 @@ function p1(points: Point[], limit: number): number {
         return set;
     };
 
-    const union = (node1: number, node2: number): void => {
+    const union = (node1: number, node2: number): number => {
         let set1 = find(node1);
         let set2 = find(node2);
 
         if (set1 === set2) {
-            return;
+            return set1;
         }
 
         if (size[set1] < size[set2]) {
@@ -72,11 +72,22 @@ function p1(points: Point[], limit: number): number {
 
         parent[set2] = set1;
         size[set1] += size[set2];
+
+        return set1;
     };
 
-    for (let idx = 0; idx < Math.min(limit, dists.length); idx++) {
+    let maxIter = Math.min(limit, dists.length);
+    if (p2) {
+        maxIter = dists.length;
+    }
+
+    for (let idx = 0; idx < maxIter; idx++) {
         const [_, idx1, idx2] = dists[idx];
-        union(idx1, idx2);
+        const root = union(idx1, idx2);
+
+        if (p2 && size[root] === N) {
+            return points[idx1][0] * points[idx2][0];
+        }
     }
 
     // Gather groups + sort
@@ -97,7 +108,9 @@ function p1(points: Point[], limit: number): number {
 }
 
 const example = readInput("d8-example.txt");
-console.log(p1(example, 10));
+console.log(solve(example, 10));
+console.log(solve(example, 10, true));
 
 const input = readInput("d8-input.txt");
-console.log(p1(input, 1000));
+console.log(solve(input, 1000));
+console.log(solve(input, 1000, true));
