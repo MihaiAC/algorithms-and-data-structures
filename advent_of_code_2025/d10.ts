@@ -1,9 +1,7 @@
 import * as fs from "fs";
 import assert from "node:assert";
-import Worker from "web-worker";
-// Polyfill Worker for Node.js
-global.Worker = Worker as any;
-import GLPK from "glpk.js";
+// @ts-ignore
+import solver from "javascript-lp-solver";
 
 type Machine = {
     target: string;
@@ -92,48 +90,40 @@ function p1(machines: Machine[]): number {
     return machines.reduce((accum: number, curr: Machine) => accum + minOps(curr), 0);
 }
 
-async function minButtonPresses(machine: Machine): Promise<number> {
-    const glpk = await GLPK();
-    const N = machine.buttons.length;
-
-    const problem = {
-        name: "ButtonPresses",
-        objective: {
-            direction: glpk.GLP_MIN,
-            name: "presses",
-            vars: machine.buttons.map((_, idx) => ({
-                name: `x${idx}`,
-                coef: 1.0,
-            })),
-        },
-        subjectTo: machine.joltReqs.map((req, counterIdx) => ({
-            name: `counter${counterIdx}`,
-            vars: machine.buttons
-                .map((button, btnIdx) =>
-                    button.includes(counterIdx) ? { name: `x${btnIdx}`, coef: 1.0 } : null
-                )
-                .filter((v) => v !== null),
-            bnds: { type: glpk.GLP_FX, ub: req, lb: req },
-        })),
-        bounds: machine.buttons.map((_, idx) => ({
-            name: `x${idx}`,
-            type: glpk.GLP_LO,
-            lb: 0.0,
-            ub: 500.0,
-        })),
+function minButtonPresses(machine: Machine): number {
+    const model: any = {
+        optimize: "totalPresses", // sum of all button presses
+        opType: "min",
+        constraints: {},
+        variables: {},
+        ints: {},
     };
 
-    const result = glpk.solve(problem);
-    return Math.round((await result).result.z);
+    machine.buttons.forEach((_, idx) => {
+        const varName = `x${idx}`;
+        model.variables[varName] = {
+            totalPresses: 1,
+        };
+        model.ints[varName] = 1; // restrict to integers
+    });
+
+    machine.joltReqs.forEach((req, counterIdx) => {
+        const constraintName = `c${counterIdx}`;
+        model.constraints[constraintName] = { equal: req };
+
+        machine.buttons.forEach((button, btnIdx) => {
+            if (button.includes(counterIdx)) {
+                model.variables[`x${btnIdx}`][constraintName] = 1;
+            }
+        });
+    });
+
+    const result = solver.Solve(model);
+    return Math.round(result.result || 0);
 }
 
-async function p2(machines: Machine[]): Promise<number> {
-    let total = 0;
-    for (const machine of machines) {
-        total += await minButtonPresses(machine);
-    }
-
-    return total;
+function p2(machines: Machine[]): number {
+    return machines.reduce((total, machine) => total + minButtonPresses(machine), 0);
 }
 
 const exampleMachines = readInput("d10-example.txt");
@@ -141,4 +131,5 @@ const inputMachines = readInput("d10-input.txt");
 console.log(p1(exampleMachines));
 console.log(p1(inputMachines));
 
-console.log(await p2(exampleMachines));
+console.log(p2(exampleMachines));
+console.log(p2(inputMachines));
