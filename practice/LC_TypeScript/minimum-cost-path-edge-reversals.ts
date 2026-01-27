@@ -5,8 +5,11 @@ function minCost(n: number, edges: number[][]): number {
     for (const edge of edges) {
         const [u, v, w] = edge;
 
-        neighbours.set(u, [...(neighbours.get(u) || []), [v, w]]);
-        neighbours.set(v, [...(neighbours.get(v) || []), [u, 2 * w]]);
+        if (!neighbours.has(u)) neighbours.set(u, []);
+        neighbours.get(u)!.push([v, w]);
+
+        if (!neighbours.has(v)) neighbours.set(v, []);
+        neighbours.get(v)!.push([u, 2 * w]);
     }
 
     const cost: number[] = Array(n).fill(Infinity);
