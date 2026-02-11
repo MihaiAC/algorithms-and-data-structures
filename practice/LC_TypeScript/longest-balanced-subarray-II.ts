@@ -4,18 +4,27 @@ function longestBalanced(nums: number[]): number {
     const N = nums.length;
     if (N === 1) return 0;
 
+    const sign = Array.from<number>({ length: N }).fill(0);
+    const maxElem = Math.max(...nums);
+    const lastPos = Array.from<number>({ length: maxElem }).fill(-1);
+
     let ans = 0;
-    for (let ii = 0; ii < N - 1; ii++) {
-        const even = new Set<number>();
-        const odd = new Set<number>();
+    for (let rightIdx = 0; rightIdx < N; rightIdx++) {
+        const num = nums[rightIdx];
 
-        for (let jj = ii; jj < N; jj++) {
-            if (nums[jj] % 2 === 0) even.add(nums[jj]);
-            else odd.add(nums[jj]);
+        // Update lastPos for num
+        if (lastPos[num] != -1) sign[lastPos[num]] = 0;
+        lastPos[num] = rightIdx;
 
-            if (even.size === odd.size) {
-                ans = Math.max(ans, jj - ii + 1);
-            }
+        // Assign sign
+        if (num % 2 === 0) sign[rightIdx] = 1;
+        else sign[rightIdx] = -1;
+
+        // Sum leftward from right. If 0 => update ans.
+        let currSum = 0;
+        for (let leftIdx = rightIdx; leftIdx >= 0; leftIdx--) {
+            currSum += sign[leftIdx];
+            if (currSum === 0) ans = Math.max(ans, rightIdx - leftIdx + 1);
         }
     }
 
