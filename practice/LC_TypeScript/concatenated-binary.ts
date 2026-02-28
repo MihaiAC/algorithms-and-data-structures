@@ -4,16 +4,16 @@ import assert from "node:assert";
 const MODN = 1000000007n;
 
 const expModMemo = memoize(
-    (base: bigint, exp: bigint, mod: bigint): bigint => {
+    (exp: bigint, mod: bigint): bigint => {
         if (exp == 0n) return 1n;
         if (exp % 2n === 0n) {
-            const half = expModMemo(base, exp / 2n, mod);
+            const half = expModMemo(exp / 2n, mod);
             return (half * half) % mod;
         } else {
-            return (base * expModMemo(base, exp - 1n, mod)) % mod;
+            return (2n * expModMemo(exp - 1n, mod)) % mod;
         }
     },
-    (base, exp, mod) => `${base},${exp},${mod}`
+    (exp, mod) => `${exp},${mod}`
 );
 
 function concatenatedBinary(n: number): number {
@@ -21,7 +21,7 @@ function concatenatedBinary(n: number): number {
     let bins = 0n;
     for (let num = n; num >= 1; num--) {
         const nDigits = BigInt(num.toString(2).length);
-        ans = (ans + BigInt(num) * expModMemo(2n, bins, MODN)) % MODN;
+        ans = (ans + BigInt(num) * expModMemo(bins, MODN)) % MODN;
         bins += nDigits;
     }
 
@@ -32,3 +32,4 @@ assert.equal(concatenatedBinary(1), 1);
 assert.equal(concatenatedBinary(3), 27);
 assert.equal(concatenatedBinary(12), 505379714);
 assert.equal(concatenatedBinary(42), 727837408);
+assert.equal(concatenatedBinary(86401), 612546858);
