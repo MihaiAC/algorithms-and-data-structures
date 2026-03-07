@@ -1,36 +1,38 @@
 import assert from "node:assert";
 
-function dumbMinFlips(s: string): number {
-    let currNum = [0, 1];
-    let currOps = [0, 0];
-
-    for (const letter of s) {
-        for (let idx = 0; idx <= 1; idx++) {
-            if (String(currNum[idx]) !== letter) currOps[idx]++;
-            currNum[idx] = 1 - currNum[idx];
-        }
-    }
-
-    return Math.min(...currOps);
-}
-
 function minFlips(s: string): number {
-    if (s.length === 1) return 0;
-    if (s[0] === s.at(-1)) return dumbMinFlips(s);
+    const N = s.length;
+    /* Counts the number of mismatches if we start with 0 or 1, respectively. */
+    let counts = [0, 0];
 
-    let firstIdx = -1;
-    for (let idx = 0; idx < s.length - 1; idx++) {
-        if (s[idx] === s[idx + 1]) {
-            firstIdx = idx;
-            break;
-        }
+    for (let idx = 0; idx < N; idx++) {
+        const num = parseInt(s[idx]);
+
+        // If idx is even, +1 to counts[0] if '1' and +1 to counts[1] if '0'
+        // If idx is odd, +1 to counts[0] if '0' and +1 to counts[1] if '1'
+        if (idx % 2 === 0) counts[1 - num]++;
+        else counts[num]++;
     }
-    if (firstIdx === -1) return 0;
 
-    return Math.min(
-        dumbMinFlips(s.slice(firstIdx + 1) + s.slice(0, firstIdx + 1)),
-        dumbMinFlips(s)
-    );
+    let minFlips = Math.min(...counts);
+    for (let idx = 0; idx < N; idx++) {
+        // We move s[idx] to the back.
+        const num = parseInt(s[idx]);
+
+        // Counts get swapped.
+        counts = [counts[1], counts[0]];
+
+        // Idx is 0 (even), so -1 to counts[0] if '1' and -1 to counts[1] if '0'.
+        counts[num]--;
+
+        // Same as above..
+        if ((N - 1) % 2 === 0) counts[1 - num]++;
+        else counts[num]++;
+
+        minFlips = Math.min(minFlips, ...counts);
+    }
+
+    return minFlips;
 }
 
 assert.equal(minFlips("111000"), 2);
