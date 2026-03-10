@@ -1,6 +1,8 @@
 from typing import List, Tuple
 from collections import defaultdict
 
+# Adapted from editorial, using SortedSet instead of SortedList.
+
 class Helper:
     def __init__(self, x: int) -> None:
         self.x: int = x

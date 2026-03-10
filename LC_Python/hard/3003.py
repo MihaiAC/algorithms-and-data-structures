@@ -1,4 +1,4 @@
-# Couldn't come up with a solution, just trying to understand the editorial...
+# Not my solution - trying to understand the editorial. 
 
 class Solution:
     def maxPartitionsAfterOperations(self, s: str, k: int) -> int:
