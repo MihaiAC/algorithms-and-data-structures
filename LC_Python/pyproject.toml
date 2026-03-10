@@ -8,3 +8,9 @@ dependencies = [
     "line-profiler>=5.0.2",
     "sortedcontainers>=2.4.0",
 ]
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+py-modules = ["SimpleProfiler"]

@@ -1,7 +1,7 @@
-from typing import List
-import SimpleProfiler
 import unittest
+from typing import List
 from bisect import bisect_right
+import SimpleProfiler
 
 class Solution:
     @SimpleProfiler.profile
