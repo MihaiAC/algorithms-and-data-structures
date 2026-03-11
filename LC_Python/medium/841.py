@@ -2,6 +2,7 @@ from typing import List
 
 from collections import deque
 
+
 class Solution:
     def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
         queue = deque()
@@ -19,12 +20,11 @@ class Solution:
                 else:
                     queue.appendleft(room_key)
                     reached.add(room_key)
-        
+
         return len(reached) == N
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
-    rooms = [[1],[2],[3],[]]
+    rooms = [[1], [2], [3], []]
     print(sol.canVisitAllRooms(rooms))

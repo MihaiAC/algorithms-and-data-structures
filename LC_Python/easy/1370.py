@@ -7,7 +7,7 @@ class Solution:
                 letters[letter] += 1
             else:
                 letters[letter] = 1
-        
+
         total = len(s)
         sorted_letters = list(letters.keys())
         sorted_letters.sort()
@@ -22,9 +22,9 @@ class Solution:
                         letters[letter] -= 1
                     total -= 1
                     if total == 0:
-                        return ''.join(sorted_str)
-            
-            for ii in range(len(sorted_letters)-1, -1, -1):
+                        return "".join(sorted_str)
+
+            for ii in range(len(sorted_letters) - 1, -1, -1):
                 letter = sorted_letters[ii]
                 if letter in letters:
                     sorted_str.append(letter)
@@ -34,10 +34,10 @@ class Solution:
                         letters[letter] -= 1
                     total -= 1
                     if total == 0:
-                        return ''.join(sorted_str)
+                        return "".join(sorted_str)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
     s = "aaaabbbbcccc"
     print(sol.sortString(s))

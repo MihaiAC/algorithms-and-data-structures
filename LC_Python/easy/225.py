@@ -1,14 +1,14 @@
 from collections import deque
 
-class MyQueue:
 
+class MyQueue:
     def __init__(self):
         self.stack1 = deque()
         self.stack2 = deque()
 
     def push(self, x: int) -> None:
         self.stack1.append(x)
-    
+
     def empty_first_stack(self):
         while len(self.stack1) > 0:
             self.stack2.append(self.stack1.pop())

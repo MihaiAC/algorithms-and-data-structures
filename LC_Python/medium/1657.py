@@ -1,5 +1,6 @@
 from typing import Dict, Set, Tuple
 
+
 class Solution:
     @staticmethod
     def getLetterFrequencyAndSet(word: str) -> Tuple[Dict[str, int], Set[str]]:
@@ -13,7 +14,7 @@ class Solution:
                 letter_freq[letter] += 1
             else:
                 letter_freq[letter] = 1
-        
+
         return (letter_freq, letter_set)
 
     @staticmethod
@@ -25,7 +26,7 @@ class Solution:
                 freq_freqs[freq] += 1
             else:
                 freq_freqs[freq] = 1
-        
+
         return freq_freqs
 
     def closeStrings(self, word1: str, word2: str) -> bool:
@@ -35,7 +36,7 @@ class Solution:
         word_set_union = word1_set.union(word2_set)
         if len(word_set_union) > len(word1_set):
             return False
-        
+
         word2_inverse_freq = Solution.getFrequencyOfFrequencies(word2_freqs)
 
         for letter in word1_freqs:
@@ -51,10 +52,8 @@ class Solution:
 
         return True
 
-        
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
     word1 = "a"
     word2 = "aa"

@@ -1,5 +1,6 @@
 from typing import List
 
+
 class Solution:
     def findWinners(self, matches: List[List[int]]) -> List[List[int]]:
         zero_losses = set()
@@ -18,7 +19,7 @@ class Solution:
                     more_than_one_loss.add(loser)
                 else:
                     one_loss.add(loser)
-        
+
         zero_losses_list = list(zero_losses)
         one_loss_list = list(one_loss)
 
@@ -28,7 +29,7 @@ class Solution:
         return [zero_losses_list, one_loss_list]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
-    matches = [[2,3],[1,3],[5,4],[6,4]]
+    matches = [[2, 3], [1, 3], [5, 4], [6, 4]]
     print(sol.findWinners(matches))

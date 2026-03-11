@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 class Spreadsheet:
     def __init__(self, rows: int):
         self.table = defaultdict(dict)
@@ -13,10 +14,9 @@ class Spreadsheet:
         letter = cell[0]
         row = int(cell[1:])
         self.table[letter][row] = 0
-        
 
     def getValue(self, formula: str) -> int:
-        elems = formula[1:].split('+')
+        elems = formula[1:].split("+")
         ans = 0
         for elem in elems:
             if elem[0].isalpha():

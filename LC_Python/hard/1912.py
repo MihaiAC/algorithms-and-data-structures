@@ -1,6 +1,7 @@
 from sortedcontainers import SortedList
 from typing import List
 
+
 class MovieRentingSystem:
     def __init__(self, n: int, entries: List[List[int]]):
         self.available = dict()
@@ -16,7 +17,7 @@ class MovieRentingSystem:
     def search(self, movie: int) -> List[int]:
         if movie not in self.available:
             return []
-        
+
         ans = []
         for price, shop in self.available[movie][:5]:
             ans.append(shop)

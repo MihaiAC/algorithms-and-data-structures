@@ -5,7 +5,7 @@ class Solution:
     # 1st idea: bottom up.
     # 2nd idea, if 1 doesn't work: special algorithm for line case + detection.
     # 3rd idea: DSU.
-    
+
     def numberOfGoodPaths(self, vals: List[int], edges: List[List[int]]) -> int:
         neighbors = dict()
         leaves = set()
@@ -16,14 +16,14 @@ class Solution:
             else:
                 neighbors[u] = [v]
                 leaves.add(u)
-        
+
             if v in neighbors:
                 neighbors[v].append(u)
                 leaves.discard(v)
             else:
                 neighbors[v] = [u]
                 leaves.add(v)
-        
+
         if len(edges) == 0:
             return 1
         elif len(edges) == 1:
@@ -31,9 +31,9 @@ class Solution:
                 return 3
             else:
                 return 2
-        
+
         number_of_paths = 0
-        
+
         paths = dict()
         parents = set()
 
@@ -43,7 +43,6 @@ class Solution:
             paths[leaf][vals[leaf]] = 1
             parents.add(neighbors[leaf][0])
             number_of_paths += 1
-
 
         while len(leaves) != N:
             new_parents = set()
@@ -67,15 +66,17 @@ class Solution:
                                 continue
                             else:
                                 if value in nr_paths:
-                                    number_of_paths += child_dict[value] * nr_paths[value]
+                                    number_of_paths += (
+                                        child_dict[value] * nr_paths[value]
+                                    )
                                     nr_paths[value] += child_dict[value]
                                 else:
                                     nr_paths[value] = child_dict[value]
                         del paths[neighbor]
-                
+
                 paths[parent] = nr_paths
-            
+
             leaves = leaves.union(parents)
             parents = new_parents
-        
+
         return self.number_of_paths

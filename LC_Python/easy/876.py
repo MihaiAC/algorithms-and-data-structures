@@ -1,5 +1,6 @@
 from typing import Optional, List
 
+
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -13,7 +14,8 @@ class ListNode:
         for val in vals[1:]:
             tail.next = ListNode(val=val, next=None)
             tail = tail.next
-        return head   
+        return head
+
 
 class Solution:
     def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
@@ -27,11 +29,11 @@ class Solution:
             double_parser = double_parser.next
             if double_parser is None:
                 return parser.next.val
-            
+
             parser = parser.next
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
     vals = [1, 2, 3, 4, 5, 6]
     head = ListNode.createFromList(vals)

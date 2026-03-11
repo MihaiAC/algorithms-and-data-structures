@@ -1,8 +1,8 @@
 from random import randint
 from collections import deque
 
-class RandomizedSet:
 
+class RandomizedSet:
     def __init__(self):
         self.key_to_idx = dict()
         self.idx_to_key = deque()
@@ -25,7 +25,7 @@ class RandomizedSet:
                 self.idx_to_key = deque()
             else:
                 val_idx = self.key_to_idx[val]
-                len_idx = len(self.key_to_idx)-1
+                len_idx = len(self.key_to_idx) - 1
 
                 if val_idx == len_idx:
                     self.idx_to_key.pop()
@@ -40,9 +40,7 @@ class RandomizedSet:
                     self.idx_to_key[val_idx] = len_key
 
             return True
-        
 
     def getRandom(self) -> int:
-        idx = randint(0, len(self.key_to_idx)-1)
+        idx = randint(0, len(self.key_to_idx) - 1)
         return self.idx_to_key[idx]
-        
