@@ -13,7 +13,7 @@ dependencies = [
 package = true
 
 [tool.setuptools]
-py-modules = ["SimpleProfiler"]
+py-modules = ["LC_Python.SimpleProfiler"]
 
 [dependency-groups]
 dev = [
