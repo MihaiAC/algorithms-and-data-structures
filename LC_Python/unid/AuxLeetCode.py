@@ -1,6 +1,5 @@
-from sys import argv
 
-from typing import Tuple, List
+from typing import Tuple
 from enum import Enum
 
 class Operation(Enum):

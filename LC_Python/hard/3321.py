@@ -1,7 +1,9 @@
 from typing import List, Tuple
 from collections import defaultdict
+from sortedcontainers import SortedSet
 
 # Adapted from editorial, using SortedSet instead of SortedList.
+
 
 class Helper:
     def __init__(self, x: int) -> None:
@@ -10,22 +12,22 @@ class Helper:
         self.large: SortedSet = SortedSet()
         self.small: SortedSet = SortedSet()
         self.occ: defaultdict[int, int] = defaultdict(int)
-    
+
     def insert(self, num: int) -> None:
         if self.occ[num] > 0:
             self.internal_remove((self.occ[num], num))
         self.occ[num] += 1
         self.internal_insert((self.occ[num], num))
-    
+
     def remove(self, num: int) -> None:
         self.internal_remove((self.occ[num], num))
         self.occ[num] -= 1
         if self.occ[num] > 0:
             self.internal_insert((self.occ[num], num))
-    
+
     def get(self) -> int:
         return self.result
-    
+
     def internal_insert(self, pair: Tuple[int, int]) -> None:
         if len(self.large) < self.x or pair > self.large[0]:
             self.result += pair[0] * pair[1]
@@ -37,7 +39,7 @@ class Helper:
                 self.small.add(to_remove)
         else:
             self.small.add(pair)
-    
+
     def internal_remove(self, pair: Tuple[int, int]) -> None:
         if pair >= self.large[0]:
             self.result -= pair[0] * pair[1]
@@ -50,6 +52,7 @@ class Helper:
         else:
             self.small.remove(pair)
 
+
 class Solution:
     def findXSum(self, nums: List[int], k: int, x: int) -> List[int]:
         helper: Helper = Helper(x)
@@ -57,7 +60,7 @@ class Solution:
         for ii in range(len(nums)):
             helper.insert(nums[ii])
             if ii >= k:
-                helper.remove(nums[ii-k])
-            if ii >= k-1:
+                helper.remove(nums[ii - k])
+            if ii >= k - 1:
                 ans.append(helper.get())
         return ans

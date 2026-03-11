@@ -44,7 +44,7 @@ class Solution:
                         val = eval("".join(final_expr))
                         if isclose(val, 24):
                             return True
-                    except ZeroDivisionError as e:
+                    except ZeroDivisionError:
                         continue
         
         return False

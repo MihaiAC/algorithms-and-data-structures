@@ -1,6 +1,5 @@
 import SimpleProfiler
 import unittest
-from collections import defaultdict
 
 class Solution:
     @SimpleProfiler.profile
