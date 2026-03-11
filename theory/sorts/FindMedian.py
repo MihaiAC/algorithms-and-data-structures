@@ -14,9 +14,9 @@ def findMedian(array):
         medians = []
         #Calculate number of medians.
         if(length % 5 == 0):
-            nrOfMedians = length//5;
+            nrOfMedians = length//5
         else:
-            nrOfMedians = length//5 + 1;
+            nrOfMedians = length//5 + 1
         #Split the array in subarrays of maximum 5 elements and add the median.
         for i in range(0,nrOfMedians):
             if(i*5 + 4 > length):

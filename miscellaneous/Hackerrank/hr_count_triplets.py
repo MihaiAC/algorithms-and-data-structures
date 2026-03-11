@@ -1,10 +1,5 @@
 #!/bin/python3
 
-import math
-import os
-import random
-import re
-import sys
 
 # Complete the countTriplets function below.
 def countTriplets_r1(arr):

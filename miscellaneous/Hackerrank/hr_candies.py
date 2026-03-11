@@ -1,8 +1,3 @@
-import math
-import os
-import random
-import re
-import sys
 
 # Assumes there are at least 2 elements in arr => handle 1 len array
 def create_monotonicity(arr):

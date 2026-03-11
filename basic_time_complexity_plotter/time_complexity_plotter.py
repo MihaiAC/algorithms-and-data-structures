@@ -2,7 +2,6 @@ import os
 import time
 import matplotlib.pyplot as plt
 from typing import Callable, Generator, List, Any
-from functools import partial
 from complexity_class_estimator import ComplexityEstimator
 
 class Plotter:

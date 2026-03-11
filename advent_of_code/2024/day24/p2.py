@@ -1,7 +1,6 @@
 from typing import Tuple, Dict, List
-from functools import reduce
 from collections.abc import Callable
-from collections import defaultdict, deque
+from collections import defaultdict
 from random import randint
 from tqdm import tqdm
 

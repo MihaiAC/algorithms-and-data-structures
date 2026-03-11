@@ -2,11 +2,6 @@
 
 #!/bin/python3
 
-import math
-import os
-import random
-import re
-import sys
 
 def construct_stack(arr,max_window,stack):
     stack.append([arr[0],1])

@@ -1,21 +1,21 @@
-#Basic queue class.
+# Basic queue class.
 class Queue:
     class Node:
-        def __init__(self,value = None, nextNode = None):
+        def __init__(self, value=None, nextNode=None):
             self.value = value
             self.nextNode = nextNode
 
         def getNextNode(self):
             return self.nextNode
 
-        def setNextNode(self,node):
+        def setNextNode(self, node):
             self.nextNode = node
 
         def getValue(self):
             return self.value
 
-    def __init__(self, value = None):
-        if(value == None):
+    def __init__(self, value=None):
+        if value is None:
             self.elements = 0
         else:
             self.dequeueNode = self.Node(value)
@@ -23,7 +23,7 @@ class Queue:
             self.elements = 1
 
     def enqueue(self, val):
-        if(self.elements == 0):
+        if self.elements == 0:
             self.dequeueNode = self.Node(val)
             self.enqueueNode = self.dequeueNode
             self.elements = 1
@@ -34,8 +34,8 @@ class Queue:
             self.elements += 1
 
     def dequeue(self):
-        if(self.elements == 0):
-            raise IndexError('Cannot dequeue an element from an empty queue.')
+        if self.elements == 0:
+            raise IndexError("Cannot dequeue an element from an empty queue.")
         else:
             returnVal = self.dequeueNode.getValue()
             self.dequeueNode = self.dequeueNode.nextNode
@@ -45,7 +45,8 @@ class Queue:
     def isEmpty(self):
         return self.elements == 0
 
-if(__name__ == '__main__'):
+
+if __name__ == "__main__":
     q = Queue()
     q.enqueue(2)
     q.enqueue(3)

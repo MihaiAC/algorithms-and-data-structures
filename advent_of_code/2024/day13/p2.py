@@ -1,6 +1,5 @@
 import re
 import pulp
-import numpy as np
 from typing import Tuple
 
 class Solution:
