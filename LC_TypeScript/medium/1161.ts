@@ -1,4 +1,4 @@
-import { TreeNode } from "./TreeNode";
+import { TreeNode } from "../TreeNode";
 
 function maxLevelSum(root: TreeNode | null): number {
     if (!root) return 0;

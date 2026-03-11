@@ -1,4 +1,4 @@
-import { TreeNode } from "./TreeNode";
+import { TreeNode } from "../TreeNode";
 
 function sumRootToLeaf(root: TreeNode | null): number {
     const sumAux = (root: TreeNode, bin: string): number => {

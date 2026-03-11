@@ -1,4 +1,4 @@
-import { TreeNode } from "./TreeNode";
+import { TreeNode } from "../TreeNode";
 
 /**
  * Definition for a binary tree node.

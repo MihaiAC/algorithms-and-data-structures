@@ -1,4 +1,4 @@
-import { TreeNode } from "./TreeNode";
+import { TreeNode } from "../TreeNode";
 
 /**
  * Returns the lowest common ancestor of n1, n2.
