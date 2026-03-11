@@ -1,11 +1,12 @@
 import re
 
+
 class Solution:
     def __init__(self, input_file):
         self.lines = []
         with open(input_file) as f:
             for line in f:
-                if line != '\n':
+                if line != "\n":
                     self.lines.append(line[:-1])
 
     def calculate_sum(self) -> int:
@@ -17,6 +18,6 @@ class Solution:
         return total_sum
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution("input")
     print(sol.calculate_sum())

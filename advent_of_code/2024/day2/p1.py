@@ -9,7 +9,11 @@ class Solution:
                 is_safe = True
                 for num in numbers[1:]:
                     num = int(num)
-                    if abs(num-prev) == 0 or abs(num-prev) > 3 or (num > prev) != increasing:
+                    if (
+                        abs(num - prev) == 0
+                        or abs(num - prev) > 3
+                        or (num > prev) != increasing
+                    ):
                         is_safe = False
                         break
                     prev = num
@@ -18,7 +22,6 @@ class Solution:
         return n_safe_reports
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     sol = Solution()
     print(sol.calculate_n_safe_reports("input"))

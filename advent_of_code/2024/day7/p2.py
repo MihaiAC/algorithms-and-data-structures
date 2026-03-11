@@ -1,6 +1,7 @@
 import re
 from typing import List, Tuple
 
+
 class Solution:
     def __init__(self, input_file: str):
         self.input_file = input_file
@@ -17,32 +18,33 @@ class Solution:
             next_partials = set()
             for partial in curr_partials:
                 if num + partial <= target:
-                    next_partials.add(num+partial)
-                
+                    next_partials.add(num + partial)
+
                 if num * partial <= target:
-                    next_partials.add(num*partial)
+                    next_partials.add(num * partial)
 
                 aux = Solution.concat(partial, num)
                 if aux <= target:
                     next_partials.add(aux)
-                
+
             curr_partials = next_partials
         return target in curr_partials
 
     @staticmethod
     def concat(num1: int, num2: int) -> int:
-        return int(str(num1)+str(num2))
+        return int(str(num1) + str(num2))
 
     def calculate_calibration_result(self):
         calibration_result = 0
         with open(self.input_file) as f:
             for line in f:
-                if line != '\n':
+                if line != "\n":
                     target, nums = self.line_to_numbers(line)
                     if self.is_possible(target, nums):
                         calibration_result += target
         return calibration_result
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sol = Solution("input1")
     print(sol.calculate_calibration_result())

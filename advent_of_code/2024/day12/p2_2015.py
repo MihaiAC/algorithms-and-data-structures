@@ -1,5 +1,6 @@
 import json
 
+
 class Solution:
     def __init__(self, input_file):
         with open(input_file) as f:
@@ -20,6 +21,7 @@ class Solution:
             current_sum += obj
         return current_sum
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sol = Solution("input")
     print(Solution.calculate_sum(sol.json))

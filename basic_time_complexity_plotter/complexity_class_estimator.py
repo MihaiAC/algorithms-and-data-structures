@@ -2,40 +2,49 @@ import numpy as np
 from scipy.optimize import curve_fit
 from typing import List
 
+
 def constant_f(N: np.ndarray, a: float, b: float) -> float:
     return b
+
 
 def logarithmic_f(N: np.ndarray, a: float, b: float) -> float:
     return a * np.log(N) + b
 
+
 def linear_f(N: np.ndarray, a: float, b: float) -> float:
     return a * N + b
+
 
 def NlogN_f(N: np.ndarray, a: float, b: float) -> float:
     return a * N * np.log(N) + b
 
+
 def N2logN_f(N: np.ndarray, a: float, b: float) -> float:
     return a * (N**2) * np.log(N) + b
+
 
 def quadratic_f(N: np.ndarray, a: float, b: float) -> float:
     return a * (N**2) + b
 
+
 def cubic_f(N: np.ndarray, a: float, b: float) -> float:
     return a * (N**3) + b
+
 
 def exponential_f(N: np.ndarray, a: float, b: float) -> float:
     return a * (2**N) + b
 
+
 def factorial_f(N: np.ndarray, a: float, b: float) -> float:
-    return a * np.sqrt(2*np.pi*N) * ((N/np.e)**N)
+    return a * np.sqrt(2 * np.pi * N) * ((N / np.e) ** N)
 
 
 class ComplexityEstimator:
-    '''
+    """
     Given a list of function input sizes and corresponding outputs,
-    estimate the complexity of the function (closest fit from a 
+    estimate the complexity of the function (closest fit from a
     predefined list of complexities).
-    '''
+    """
 
     CLASSES = {
         "O(1)": constant_f,
@@ -46,7 +55,7 @@ class ComplexityEstimator:
         "O(N^2)": quadratic_f,
         "O(N^3)": cubic_f,
         "O(2**N)": exponential_f,
-        "O(N!)": factorial_f
+        "O(N!)": factorial_f,
     }
 
     def __init__(self):
@@ -61,9 +70,9 @@ class ComplexityEstimator:
             try:
                 params, _ = curve_fit(func, input_sizes, runtimes)
                 preds = func(input_sizes, *params)
-                mean_squared_error = np.mean((preds-runtimes)**2)
+                mean_squared_error = np.mean((preds - runtimes) ** 2)
                 errors[compl_class] = mean_squared_error
             except Exception as e:
                 print(e)
-                errors[compl_class] = float('inf')
+                errors[compl_class] = float("inf")
         return min(errors, key=errors.get)

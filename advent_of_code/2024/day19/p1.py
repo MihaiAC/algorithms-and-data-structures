@@ -1,9 +1,11 @@
 from typing import List
 
+
 class TrieNode:
-    def __init__(self, is_end: bool=False):
+    def __init__(self, is_end: bool = False):
         self.is_end = is_end
         self.transitions = dict()
+
 
 class Trie:
     def __init__(self, words: List[str]):
@@ -28,7 +30,7 @@ class Trie:
         for letter in word:
             if len(curr_states) == 0:
                 return False
-            
+
             next_states = set()
             for state in curr_states:
                 if letter in state.transitions:
@@ -36,15 +38,16 @@ class Trie:
                     next_states.add(next_state)
                     if next_state.is_end:
                         next_states.add(self.root)
-            
+
             curr_states = next_states
         return self.root in curr_states
 
+
 class Solution:
     def __init__(self, input_file: str):
-        all_input = open(input_file).read().strip().split('\n')
+        all_input = open(input_file).read().strip().split("\n")
         self.words_to_validate = all_input[2:]
-        self.trie = Trie(all_input[0].split(', '))
+        self.trie = Trie(all_input[0].split(", "))
 
     def count_valid_words(self) -> int:
         n_valid = 0
@@ -54,6 +57,6 @@ class Solution:
         return n_valid
 
 
-if __name__ == '__main__':
-    sol = Solution('input')
+if __name__ == "__main__":
+    sol = Solution("input")
     print(sol.count_valid_words())

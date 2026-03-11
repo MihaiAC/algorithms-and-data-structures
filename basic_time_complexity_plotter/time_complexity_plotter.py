@@ -4,17 +4,21 @@ import matplotlib.pyplot as plt
 from typing import Callable, Generator, List, Any
 from complexity_class_estimator import ComplexityEstimator
 
+
 class Plotter:
     """
     Attempts to plot the time complexity for the provided function.
     The function should have only one input whose size variation we're interested in.
     """
-    def __init__(self, 
-                 func: Callable[..., Any], 
-                 generator: Generator[List[Any], None, None], 
-                 get_size: Callable[..., int],
-                 save_path: str,
-                 fig_name: str):
+
+    def __init__(
+        self,
+        func: Callable[..., Any],
+        generator: Generator[List[Any], None, None],
+        get_size: Callable[..., int],
+        save_path: str,
+        fig_name: str,
+    ):
         """
         func      = function whose time complexity we want to plot;
         generator = a generator that generates inputs for func;
@@ -41,26 +45,33 @@ class Plotter:
                 start_time = time.time()
                 self.func(*curr_args)
                 total_time += time.time() - start_time
-            total_time = total_time/self.REPEATS
+            total_time = total_time / self.REPEATS
 
             run_times.append(total_time)
             input_sizes.append(self.get_size(*curr_args))
-        
+
         # Create save_dir if it doesn't exist.
         if not os.path.isdir(self.save_path):
             os.makedirs(self.save_path)
 
         # Generate + save the plot.
         plt.figure(figsize=(10, 10))
-        plt.scatter(input_sizes, run_times, color='black')
-        plt.title('Time complexity for ' + self.func.__name__ + '\nEstimated: ' + ComplexityEstimator.estimate_complexity(input_sizes, run_times))
-        plt.xlabel('Input size')
-        plt.ylabel('Time')
+        plt.scatter(input_sizes, run_times, color="black")
+        plt.title(
+            "Time complexity for "
+            + self.func.__name__
+            + "\nEstimated: "
+            + ComplexityEstimator.estimate_complexity(input_sizes, run_times)
+        )
+        plt.xlabel("Input size")
+        plt.ylabel("Time")
         plt.savefig(self.save_path + self.fig_name)
 
+
 # Example usage
-if __name__ == '__main__':
+if __name__ == "__main__":
     import numpy as np
+
     # Function to be timed
     func = sorted
 
@@ -71,9 +82,8 @@ if __name__ == '__main__':
             yield [func_input]
 
     get_size = len
-    save_path = './'
-    fig_name = 'Simple plot'
+    save_path = "./"
+    fig_name = "Simple plot"
 
     plotter = Plotter(func, gen, get_size, save_path, fig_name)
     plotter.plot()
-    

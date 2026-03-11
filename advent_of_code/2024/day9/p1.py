@@ -3,7 +3,7 @@ class Solution:
         with open(input_file) as f:
             for line in f:
                 self.line = line
-    
+
     def calculate_checksum(self) -> int:
         left_lidx = 0
         right_lidx = len(self.line)
@@ -30,25 +30,24 @@ class Solution:
                             right_lidx -= 1
                         right_remaining_repeats = int(self.line[right_lidx])
                         right_current_id = right_lidx // 2
-                    
+
                     if left_lidx >= right_lidx:
                         break
-                    
+
                     # print(f"(Filling empty) Index: {block_idx}, number: {right_current_id}")
                     checksum += block_idx * right_current_id
                     right_remaining_repeats -= 1
                     block_idx += 1
                 left_lidx += 1
-        
+
         for _ in range(right_remaining_repeats):
             checksum += block_idx * right_current_id
             # print(f"(FINAL) Index: {block_idx}, number: {right_current_id}")
             block_idx += 1
-        
+
         return checksum
 
 
-
-if __name__ == '__main__':
-    sol = Solution('input')
+if __name__ == "__main__":
+    sol = Solution("input")
     print(sol.calculate_checksum())

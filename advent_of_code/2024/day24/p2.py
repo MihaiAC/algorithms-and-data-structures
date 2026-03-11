@@ -4,99 +4,110 @@ from collections import defaultdict
 from random import randint
 from tqdm import tqdm
 
+
 class Wire:
     def __init__(self, name: str, value: bool):
         self.name = name
         self.value = value
         self.outputs = []
-    
+
     @property
     def is_wire(self) -> bool:
         return True
-    
+
     @property
     def is_gate(self) -> bool:
         return False
 
+
 class Gate:
-    def __init__(self, name: str, operator_name: str=None, operator_f: Callable[[Tuple[bool, bool]], bool]=None):
+    def __init__(
+        self,
+        name: str,
+        operator_name: str = None,
+        operator_f: Callable[[Tuple[bool, bool]], bool] = None,
+    ):
         self.name = name
-        
+
         self.inputs = []
         self.outputs = []
-        
+
         self.operator_name = operator_name
         self.operator_f = operator_f
-    
+
     @property
     def value(self):
         if len(self.inputs) != 2:
-            raise ValueError('Attempted to calculate the value of a gate with fewer than two inputs.')
+            raise ValueError(
+                "Attempted to calculate the value of a gate with fewer than two inputs."
+            )
         return int(self.operator_f(self.inputs[0].value, self.inputs[1].value))
-    
+
     @property
     def is_wire(self) -> bool:
         return False
-    
+
     @property
     def is_gate(self) -> bool:
         return True
-    
+
     def is_fixed(self) -> bool:
         inp1 = self.inputs[0]
         inp2 = self.inputs[1]
 
         if inp1.is_wire and inp2.is_wire:
             return True
-        elif self.operator_name == 'AND' and ((inp1.value == 0 and inp1.is_wire) or 
-                                              (inp2.value == 0 and inp2.is_wire)):
+        elif self.operator_name == "AND" and (
+            (inp1.value == 0 and inp1.is_wire) or (inp2.value == 0 and inp2.is_wire)
+        ):
             return True
-        elif self.operator_name == 'OR' and ((inp1.value == 1 and inp1.is_wire) or 
-                                             (inp2.value == 1 and inp2.is_wire)):
+        elif self.operator_name == "OR" and (
+            (inp1.value == 1 and inp1.is_wire) or (inp2.value == 1 and inp2.is_wire)
+        ):
             return True
         return False
-    
+
 
 class Solution:
     SELECT_OP = {
-        'AND': lambda x,y: x and y,
-        'OR' : lambda x,y: x or y,
-        'XOR': lambda x,y: x ^ y
+        "AND": lambda x, y: x and y,
+        "OR": lambda x, y: x or y,
+        "XOR": lambda x, y: x ^ y,
     }
 
     def __init__(self, input_file: str):
-        input_lines = open(input_file).read().strip().split('\n')
-        
+        input_lines = open(input_file).read().strip().split("\n")
+
         self.x_wires = dict()
         self.y_wires = dict()
         self.input_to = defaultdict(list)
         self.gates = dict()
-        
+
         parsed_first_half = False
         for line in input_lines:
-            if line == '':
+            if line == "":
                 parsed_first_half = True
                 continue
-            
+
             if not parsed_first_half:
-                wire_name, wire_value = line.split(': ')
-                if wire_name[0] == 'x':
+                wire_name, wire_value = line.split(": ")
+                if wire_name[0] == "x":
                     self.x_wires[wire_name] = Wire(wire_name, int(wire_value))
                 else:
                     self.y_wires[wire_name] = Wire(wire_name, int(wire_value))
             else:
-                line_vals = line.split(' ')
+                line_vals = line.split(" ")
                 v1_name, v2_name, gate_name = line_vals[0], line_vals[2], line_vals[4]
                 op_name = line_vals[1]
-                
+
                 self.add_gate_by_name(v1_name)
                 self.add_gate_by_name(v2_name)
                 self.add_gate_by_name(gate_name)
-                
+
                 input_1 = self.get_by_name(v1_name)
                 input_2 = self.get_by_name(v2_name)
                 gate = self.get_by_name(gate_name)
-                
+
                 gate.inputs.append(input_1)
                 gate.inputs.append(input_2)
 
@@ -105,7 +116,7 @@ class Solution:
 
                 input_1.outputs.append(gate)
                 input_2.outputs.append(gate)
-        
+
         # Dict that maps the z_gate name to its desired output.
         # Dict[str, int]
         self.correct_zs = self.calculate_correct_zs()
@@ -114,14 +125,13 @@ class Solution:
         self.fixed_gates = self.calculate_fixed_gates()
         print(f"Fixed gates:\n {[gate.name for gate in self.fixed_gates]}")
 
-
     def is_wire(self, name: str) -> bool:
-        return name[0] in ['x', 'y']
+        return name[0] in ["x", "y"]
 
     def get_by_name(self, name: str) -> Wire | Gate:
-        if name[0] == 'x':
+        if name[0] == "x":
             return self.x_wires[name]
-        elif name[0] == 'y':
+        elif name[0] == "y":
             return self.y_wires[name]
         return self.gates[name]
 
@@ -133,13 +143,12 @@ class Solution:
         # Check if we have already added this gate.
         if name in self.gates:
             return
-        
+
         # Add a new gate with the provided name as ID.
         new_gate = Gate(name)
         self.gates[name] = new_gate
 
         return
-        
 
     def calculate_correct_zs(self) -> Dict[str, int]:
         x_keys = sorted(list(self.x_wires.keys()))
@@ -150,53 +159,53 @@ class Solution:
         for idx in range(len(x_keys)):
             x_key, y_key = x_keys[idx], y_keys[idx]
             x_val, y_val = self.x_wires[x_key].value, self.y_wires[y_key].value
-            z_key = 'z' + x_key[1:]
+            z_key = "z" + x_key[1:]
 
             if x_val == 1 and y_val == 1:
                 z_val = carry
                 carry = 1
             elif x_val == 1 or y_val == 1:
-                z_val = 1-carry
+                z_val = 1 - carry
             else:
                 z_val = carry
                 carry = 0
-            
+
             correct_zs[z_key] = z_val
 
             # print(f"{x_key}={x_val} {y_key}={y_val} {z_key}={z_val} carry={carry}")
-        
-        last_z_nr = int(x_key[1:])+1
+
+        last_z_nr = int(x_key[1:]) + 1
         if last_z_nr < 10:
-            last_z_key = 'z0' + str(last_z_nr)
+            last_z_key = "z0" + str(last_z_nr)
         else:
-            last_z_key = 'z' + str(last_z_nr) 
-        
+            last_z_key = "z" + str(last_z_nr)
+
         correct_zs[last_z_key] = carry
         return correct_zs
-    
+
     def calculate_fixed_gates(self) -> List[Gate]:
         return [x for x in self.gates.values() if x.is_fixed()]
 
     def propagate_print(self, gate: Gate) -> str:
         inp1 = gate.inputs[0]
         inp2 = gate.inputs[1]
-        
-        ret_str = '('
+
+        ret_str = "("
         if inp1.is_wire:
-            ret_str += inp1.name + '(' + str(inp1.value) + ')'
+            ret_str += inp1.name + "(" + str(inp1.value) + ")"
         else:
             ret_str += self.propagate_print(inp1)
-        
-        ret_str += ' ' + gate.operator_name + ' '
-        
+
+        ret_str += " " + gate.operator_name + " "
+
         if inp2.is_wire:
-            ret_str += inp2.name + '(' + str(inp2.value) + ')'
+            ret_str += inp2.name + "(" + str(inp2.value) + ")"
         else:
             ret_str += self.propagate_print(inp1)
-        
-        ret_str += ')'
+
+        ret_str += ")"
         return ret_str
-     
+
     def change_xy_until_mismatch(self):
         incorrect_zs_names = []
         for _ in tqdm(range(1000)):
@@ -204,20 +213,20 @@ class Solution:
                 x_wire.value = randint(0, 1)
             for _, y_wire in self.y_wires.items():
                 y_wire.value = randint(0, 1)
-            
+
             self.correct_zs = self.calculate_correct_zs()
-            
+
             for name, gate in self.gates.items():
-                if name[0] == 'z':
+                if name[0] == "z":
                     if gate.value != self.correct_zs[name]:
                         incorrect_zs_names.append(name)
-            
+
             if len(incorrect_zs_names) > 0:
                 print("Incorrect: ")
                 print(incorrect_zs_names)
                 break
 
 
-if __name__ == '__main__':
-    sol = Solution('input')
+if __name__ == "__main__":
+    sol = Solution("input")
     print(sol.change_xy_until_mismatch())

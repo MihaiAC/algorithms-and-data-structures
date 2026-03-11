@@ -7,43 +7,44 @@ def countTriplets_r1(arr):
 
     count = 0
     for elem in arr:
-        if(elem in count_numbers):
-            if(count_numbers[elem] >= 2):
-                count += count_numbers[elem] * (count_numbers[elem]-1) // 2
+        if elem in count_numbers:
+            if count_numbers[elem] >= 2:
+                count += count_numbers[elem] * (count_numbers[elem] - 1) // 2
             count_numbers[elem] += 1
         else:
             count_numbers[elem] = 1
     return count
 
+
 def countTriplets(arr, r):
-    if(r == 1):
+    if r == 1:
         return countTriplets_r1(arr)
-    
-    r_square = r ** 2
+
+    r_square = r**2
 
     number_counts = dict()
     accum = dict()
-    
+
     count = 0
 
     for elem in arr:
-        if(elem % r_square == 0):
-            if(elem // r in accum):
-                count += accum[elem//r]
-        if(elem % r == 0):
-            if(elem // r in number_counts):
-                if(elem in accum):
-                    accum[elem] += number_counts[elem//r]
+        if elem % r_square == 0:
+            if elem // r in accum:
+                count += accum[elem // r]
+        if elem % r == 0:
+            if elem // r in number_counts:
+                if elem in accum:
+                    accum[elem] += number_counts[elem // r]
                 else:
-                    accum[elem] = number_counts[elem//r]
-        if(elem in number_counts):
+                    accum[elem] = number_counts[elem // r]
+        if elem in number_counts:
             number_counts[elem] += 1
         else:
             number_counts[elem] = 1
     return count
-            
-if __name__ == '__main__':    
 
+
+if __name__ == "__main__":
     f = open("input06.txt", "r")
     nr = f.read()
     nr = nr.rstrip().split()

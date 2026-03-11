@@ -7,6 +7,7 @@ def is_unique(word):
             freq_dict[character] = 1
     return True
 
+
 print(is_unique("Palindrome"))
 print(is_unique("Great Britain"))
 print(is_unique(""))
