@@ -1,6 +1,11 @@
 import assert from "node:assert";
 
 const MODN = 10 ** 9 + 7;
+const MODNbig = BigInt(MODN);
+
+function mulmod(a: number, b: number): number {
+    return Number((BigInt(a) * BigInt(b)) % MODNbig);
+}
 
 class Fancy {
     private vals: number[];
@@ -33,10 +38,10 @@ class Fancy {
 
         const lastMod = this.mods.length > 0 ? this.mods.at(-1) : undefined;
         if (lastMod && lastMod[0] === this.vals.length - 1) {
-            lastMod[1] = (lastMod[1] * m) % MODN;
-            lastMod[2] = (lastMod[2] * m) % MODN;
+            lastMod[1] = mulmod(lastMod[1], m);
+            lastMod[2] = mulmod(lastMod[2], m);
         } else {
-            this.mods.push([this.vals.length - 1, m, 0]);
+            this.mods.push([this.vals.length - 1, m % MODN, 0]);
         }
     }
 
@@ -50,7 +55,7 @@ class Fancy {
             const mid = Math.floor((lo + hi) / 2);
 
             if (valsIdx < this.mods[mid][0]) {
-                hi = mid - 1;
+                hi = mid;
                 continue;
             }
 
@@ -65,8 +70,8 @@ class Fancy {
     accumFrom(modsIdx: number): number[] {
         let [mult, add] = [1, 0];
         for (const [_, xMult, xAdd] of this.mods.slice(modsIdx)) {
-            mult = (mult * xMult) % MODN;
-            add = (((add * xMult) % MODN) + xAdd) % MODN;
+            mult = mulmod(mult, xMult);
+            add = (mulmod(add, xMult) + xAdd) % MODN;
         }
 
         return [mult, add];
@@ -85,7 +90,7 @@ class Fancy {
         }
 
         const [mult, add] = this.accumFrom(modsIdx);
-        return (((mult * this.vals[idx]) % MODN) + add) % MODN;
+        return (mulmod(mult, this.vals[idx]) + add) % MODN;
     }
 }
 
