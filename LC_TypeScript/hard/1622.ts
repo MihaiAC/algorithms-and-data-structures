@@ -1,96 +1,60 @@
 import assert from "node:assert";
 
 const MODN = 10 ** 9 + 7;
-const MODNbig = BigInt(MODN);
+const BIG_MODN = BigInt(MODN);
 
-function mulmod(a: number, b: number): number {
-    return Number((BigInt(a) * BigInt(b)) % MODNbig);
+function mulMod(a: number, b: number): number {
+    return Number((BigInt(a) * BigInt(b)) % BIG_MODN);
+}
+
+function addMod(a: number, b: number): number {
+    return Number((BigInt(a) + BigInt(b) + BIG_MODN) % BIG_MODN);
+}
+
+function powMod(base: bigint, exp: bigint): number {
+    let res = 1n;
+
+    while (exp > 0n) {
+        if (exp % 2n === 1n) res = (res * base) % BIG_MODN;
+        exp >>= 1n;
+        base = (base * base) % BIG_MODN;
+    }
+
+    return Number(res % BIG_MODN);
+}
+
+function invMod(x: number): number {
+    return powMod(BigInt(x), BIG_MODN - 2n);
 }
 
 class Fancy {
     private vals: number[];
-    // mods[0] = max vals index when operation was applied
-    // , where operation := mods[1] * x + mods[2]
-    private mods: number[][];
+    private mul: number;
+    private add: number;
 
     constructor() {
         this.vals = [];
-        this.mods = [];
+        this.mul = 1;
+        this.add = 0;
     }
 
     append(val: number): void {
-        this.vals.push(val);
+        const modifiedVal = mulMod(addMod(val, -this.add), invMod(this.mul));
+        this.vals.push(modifiedVal);
     }
 
     addAll(inc: number): void {
-        if (this.vals.length === 0) return;
-
-        const lastMod = this.mods.length > 0 ? this.mods.at(-1) : undefined;
-        if (lastMod && lastMod[0] === this.vals.length - 1) {
-            lastMod[2] = (lastMod[2] + inc) % MODN;
-        } else {
-            this.mods.push([this.vals.length - 1, 1, inc]);
-        }
+        this.add = addMod(this.add, inc);
     }
 
     multAll(m: number): void {
-        if (this.vals.length === 0) return;
-
-        const lastMod = this.mods.length > 0 ? this.mods.at(-1) : undefined;
-        if (lastMod && lastMod[0] === this.vals.length - 1) {
-            lastMod[1] = mulmod(lastMod[1], m);
-            lastMod[2] = mulmod(lastMod[2], m);
-        } else {
-            this.mods.push([this.vals.length - 1, m % MODN, 0]);
-        }
-    }
-
-    searchModsIndex(valsIdx: number): number {
-        if (valsIdx > this.mods.at(-1)![0]) return this.mods.length;
-        if (valsIdx < this.mods[0][0]) return 0;
-
-        // Need to find mid so: mods[mid] <= idx < mods[mid+1]
-        let [lo, hi] = [0, this.mods.length - 1];
-        while (lo < hi) {
-            const mid = Math.floor((lo + hi) / 2);
-
-            if (valsIdx < this.mods[mid][0]) {
-                hi = mid;
-                continue;
-            }
-
-            if (mid + 1 === this.mods.length) return mid;
-            if (valsIdx < this.mods[mid + 1][0]) return mid;
-            lo = mid + 1;
-        }
-
-        return lo;
-    }
-
-    accumFrom(modsIdx: number): number[] {
-        let [mult, add] = [1, 0];
-        for (const [_, xMult, xAdd] of this.mods.slice(modsIdx)) {
-            mult = mulmod(mult, xMult);
-            add = (mulmod(add, xMult) + xAdd) % MODN;
-        }
-
-        return [mult, add];
+        this.add = mulMod(this.add, m);
+        this.mul = mulMod(this.mul, m);
     }
 
     getIndex(idx: number): number {
         if (idx >= this.vals.length) return -1;
-        if (this.mods.length === 0) return this.vals[idx];
-
-        // Binary search on the first index of this.mods.
-        let modsIdx = this.searchModsIndex(idx);
-
-        if (modsIdx === this.mods.length) return this.vals[idx];
-        if (this.mods[modsIdx]![0] < idx) {
-            modsIdx += 1;
-        }
-
-        const [mult, add] = this.accumFrom(modsIdx);
-        return (mulmod(mult, this.vals[idx]) + add) % MODN;
+        return addMod(mulMod(this.vals[idx], this.mul), this.add);
     }
 }
 
