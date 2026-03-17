@@ -3,18 +3,24 @@ from typing import List
 
 class Solution:
     def largestSubmatrix(self, matrix: List[List[int]]) -> int:
-        nrows, ncols, ans = len(matrix), len(matrix[0]), 0
+        M, N = len(matrix), len(matrix[0])
+        ans = 0
+        prev_row = [0] * N
 
-        for ncol in range(ncols):
-            for nrow in range(1, nrows):
-                matrix[nrow][ncol] *= 1 + matrix[nrow - 1][ncol]
+        for ii in range(M):
+            curr_row = matrix[ii][:]
 
-        for nrow in range(nrows):
-            matrix[nrow].sort(reverse=True)
-            for ncol in range(ncols):
-                if matrix[nrow][ncol] == 0:
+            for jj in range(N):
+                if curr_row[jj] == 1:
+                    curr_row[jj] += prev_row[jj]
+
+            sorted_row = sorted(curr_row, reverse=True)
+            for jj in range(N):
+                if sorted_row[jj] == 0:
                     break
-                ans = max(ans, matrix[nrow][ncol] * (ncol + 1))
+                ans = max(ans, sorted_row[jj] * (jj + 1))
+
+            prev_row = curr_row
 
         return ans
 
