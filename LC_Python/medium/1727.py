@@ -5,22 +5,28 @@ class Solution:
     def largestSubmatrix(self, matrix: List[List[int]]) -> int:
         M, N = len(matrix), len(matrix[0])
         ans = 0
-        prev_row = [0] * N
+        prev_heights = []
 
         for ii in range(M):
-            curr_row = matrix[ii][:]
+            heights = []
+            seen = [False] * N
 
+            # Increment heights, maintains order assuming prev_heights were sorted
+            for height, jj in prev_heights:
+                if matrix[ii][jj] == 1:
+                    heights.append((height + 1, jj))
+                    seen[jj] = True
+
+            # Add new heights.
             for jj in range(N):
-                if curr_row[jj] == 1:
-                    curr_row[jj] += prev_row[jj]
+                if matrix[ii][jj] == 1 and not seen[jj]:
+                    heights.append((1, jj))
 
-            sorted_row = sorted(curr_row, reverse=True)
-            for jj in range(N):
-                if sorted_row[jj] == 0:
-                    break
-                ans = max(ans, sorted_row[jj] * (jj + 1))
+            # Update ans
+            for jj in range(len(heights)):
+                ans = max(ans, heights[jj][0] * (jj + 1))
 
-            prev_row = curr_row
+            prev_heights = heights
 
         return ans
 
