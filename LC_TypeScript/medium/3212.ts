@@ -1,36 +1,34 @@
 import assert from "node:assert";
 
-type Freq = {
-    nx: number;
-    ny: number;
-};
-
-const DEFAULT_FREQ: Freq = {
-    nx: 0,
-    ny: 0,
-};
-
-const toKey = (x: number, y: number): string => `(${x}, ${y})`;
+const cond = (nx: number, ny: number): boolean => nx >= 1 && nx === ny;
+const toNum = (val: string, ref: string): number => (val === ref ? 1 : 0);
 
 function numberOfSubmatrices(grid: string[][]): number {
     const [M, N] = [grid.length, grid[0].length];
-    const dp = new Map<string, Freq>();
+    let prevX: number[] = Array.from<number>({ length: N }).fill(0);
+    let prevY: number[] = Array.from<number>({ length: N }).fill(0);
+
+    let currX: number[] = Array.from<number>({ length: N }).fill(0);
+    let currY: number[] = Array.from<number>({ length: N }).fill(0);
 
     let count = 0;
     for (let ii = 0; ii < M; ii++) {
-        for (let jj = 0; jj < N; jj++) {
-            const { nx: leftX, ny: leftY } = dp.get(toKey(ii, jj - 1)) ?? DEFAULT_FREQ;
-            const { nx: topX, ny: topY } = dp.get(toKey(ii - 1, jj)) ?? DEFAULT_FREQ;
-            const { nx: diagX, ny: diagY } =
-                dp.get(toKey(ii - 1, jj - 1)) ?? DEFAULT_FREQ;
+        currX[0] = toNum(grid[ii][0], "X") + prevX[0];
+        currY[0] = toNum(grid[ii][0], "Y") + prevY[0];
 
-            const cx = leftX + topX - diagX + (grid[ii][jj] === "X" ? 1 : 0);
-            const cy = leftY + topY - diagY + (grid[ii][jj] === "Y" ? 1 : 0);
+        if (cond(currX[0], currY[0])) count++;
 
-            if (cx >= 1 && cx === cy) count += 1;
+        for (let jj = 1; jj < N; jj++) {
+            currX[jj] =
+                currX[jj - 1] + prevX[jj] - prevX[jj - 1] + toNum(grid[ii][jj], "X");
+            currY[jj] =
+                currY[jj - 1] + prevY[jj] - prevY[jj - 1] + toNum(grid[ii][jj], "Y");
 
-            dp.set(toKey(ii, jj), { nx: cx, ny: cy });
+            if (cond(currX[jj], currY[jj])) count += 1;
         }
+
+        [currX, prevX] = [prevX, currX];
+        [currY, prevY] = [prevY, currY];
     }
 
     return count;
