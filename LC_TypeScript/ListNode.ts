@@ -38,4 +38,15 @@ export class ListNode {
 
         return head === null && node === null;
     }
+
+    public toString(): string {
+        const arr = [];
+        let curr: ListNode | null = this;
+        while (curr !== null) {
+            arr.push(curr.val);
+            curr = curr.next;
+        }
+
+        return arr.toString();
+    }
 }
