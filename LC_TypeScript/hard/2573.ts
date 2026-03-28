@@ -8,6 +8,7 @@ function findTheString(lcp: number[][]): string {
     for (let ii = 0; ii < N; ii++) {
         if (ans[ii] !== "") continue;
         const letter = String.fromCharCode(currCode);
+        if (letter > "z") return "";
 
         ans[ii] = letter;
         for (let jj = ii + 1; jj < N; jj++) {
