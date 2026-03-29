@@ -14,14 +14,9 @@ function copyRandomList(head: _Node | null): _Node | null {
     if (head === null) return null;
 
     const copyHead = new _Node(head.val);
+    const nodeToCopy = new Map<_Node, _Node>();
 
-    const nodeToIdx = new Map<_Node, number>();
-    const idxToCopyNode = new Map<number, _Node>();
-
-    let currIdx = 0;
-    nodeToIdx.set(head, currIdx);
-    idxToCopyNode.set(currIdx, copyHead);
-    currIdx++;
+    nodeToCopy.set(head, copyHead);
 
     let curr = head.next;
     let currCopy = copyHead;
@@ -29,23 +24,17 @@ function copyRandomList(head: _Node | null): _Node | null {
     while (curr !== null) {
         currCopy.next = new _Node(curr.val);
 
-        nodeToIdx.set(curr, currIdx);
-        idxToCopyNode.set(currIdx, currCopy.next);
+        nodeToCopy.set(curr, currCopy.next);
 
         currCopy = currCopy.next;
         curr = curr.next;
-        currIdx++;
     }
 
     // Set random links in the copy.
     currCopy = copyHead;
     curr = head;
     while (currCopy !== null) {
-        if (curr!.random) {
-            const randomIdx = nodeToIdx.get(curr!.random)!;
-            currCopy.random = idxToCopyNode.get(randomIdx)!;
-        }
-
+        if (curr!.random) currCopy.random = nodeToCopy.get(curr!.random)!;
         curr = curr!.next;
         currCopy = currCopy.next!;
     }
