@@ -1,23 +1,26 @@
 import assert from "node:assert";
 
+function letterToNum(letter: string): number {
+    return letter.charCodeAt(0) - "a".charCodeAt(0);
+}
+
 function checkStrings(s1: string, s2: string): boolean {
-    const [e1, o1]: [string[], string[]] = [[], []];
-    const [e2, o2]: [string[], string[]] = [[], []];
+    const freqEven = new Array(26).fill(0);
+    const freqOdd = new Array(26).fill(0);
 
-    const extract = (s: string, e: string[], o: string[]) => {
-        Array.from(s).map((letter: string, idx: number) => {
-            if (idx % 2 === 0) e.push(letter);
-            else o.push(letter);
-        });
-    };
+    const N = s1.length;
 
-    const checkEq = (a1: string[], a2: string[]): boolean =>
-        a1.sort().join("") === a2.sort().join("");
+    for (let idx = 0; idx < N; idx++) {
+        if (idx % 2 === 0) {
+            freqEven[letterToNum(s1[idx])]++;
+            freqEven[letterToNum(s2[idx])]--;
+        } else {
+            freqOdd[letterToNum(s1[idx])]++;
+            freqOdd[letterToNum(s2[idx])]--;
+        }
+    }
 
-    extract(s1, e1, o1);
-    extract(s2, e2, o2);
-
-    return checkEq(e1, e2) && checkEq(o1, o2);
+    return freqEven.every((x) => x === 0) && freqOdd.every((x) => x === 0);
 }
 
 assert(checkStrings("abcdba", "cabdab"));
