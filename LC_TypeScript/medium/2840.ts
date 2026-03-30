@@ -8,9 +8,7 @@ function checkStrings(s1: string, s2: string): boolean {
     const freqEven = new Array(26).fill(0);
     const freqOdd = new Array(26).fill(0);
 
-    const N = s1.length;
-
-    for (let idx = 0; idx < N; idx++) {
+    for (let idx = 0; idx < s1.length; idx++) {
         if (idx % 2 === 0) {
             freqEven[letterToNum(s1[idx])]++;
             freqEven[letterToNum(s2[idx])]--;
