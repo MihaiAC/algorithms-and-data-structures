@@ -12,7 +12,7 @@ function minSubarray(nums: number[], p: number): number {
     sum = sum % p;
     if (sum === 0) return 0;
 
-    const modLastIdx = new Array(p).fill(-1);
+    const modLastIdx = new Map<number, number>();
     let currMod = 0;
     let ans = N;
     for (let idx = 0; idx < N; idx++) {
@@ -20,10 +20,10 @@ function minSubarray(nums: number[], p: number): number {
         if (currMod === sum) ans = Math.min(ans, idx + 1);
 
         const searchMod = (currMod - sum + p) % p;
-        if (modLastIdx[searchMod] !== -1)
-            ans = Math.min(ans, idx - modLastIdx[searchMod]);
+        if (modLastIdx.has(searchMod))
+            ans = Math.min(ans, idx - modLastIdx.get(searchMod)!);
 
-        modLastIdx[currMod] = idx;
+        modLastIdx.set(currMod, idx);
     }
 
     return ans < N ? ans : -1;
