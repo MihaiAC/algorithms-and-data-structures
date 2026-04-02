@@ -11,14 +11,17 @@ function maximumAmount(coins: number[][]): number {
         return max !== -Infinity ? max : 0;
     };
 
-    for (let kk = 2; kk >= 0; kk--) {
-        for (let jj = N - 1; jj >= 0; jj--) {
-            for (let ii = M - 1; ii >= 0; ii--) {
-                const maxNormal = coins[ii][jj] + maxNeighbours(ii, jj, kk);
-                if (coins[ii][jj] < 0 && kk < 2) {
-                    dp[ii][jj][kk] = Math.max(maxNormal, maxNeighbours(ii, jj, kk + 1));
-                } else dp[ii][jj][kk] = maxNormal;
-            }
+    for (let jj = N - 1; jj >= 0; jj--) {
+        for (let ii = M - 1; ii >= 0; ii--) {
+            dp[ii][jj][2] = coins[ii][jj] + maxNeighbours(ii, jj, 2);
+            dp[ii][jj][1] = Math.max(
+                coins[ii][jj] + maxNeighbours(ii, jj, 1),
+                maxNeighbours(ii, jj, 2)
+            );
+            dp[ii][jj][0] = Math.max(
+                coins[ii][jj] + maxNeighbours(ii, jj, 0),
+                maxNeighbours(ii, jj, 1)
+            );
         }
     }
 
