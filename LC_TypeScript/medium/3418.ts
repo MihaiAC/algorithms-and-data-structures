@@ -11,8 +11,8 @@ function maximumAmount(coins: number[][]): number {
         return max !== -Infinity ? max : 0;
     };
 
-    for (let jj = N - 1; jj >= 0; jj--) {
-        for (let ii = M - 1; ii >= 0; ii--) {
+    for (let ii = M - 1; ii >= 0; ii--) {
+        for (let jj = N - 1; jj >= 0; jj--) {
             dp[ii][jj][2] = coins[ii][jj] + maxNeighbours(ii, jj, 2);
             dp[ii][jj][1] = Math.max(
                 coins[ii][jj] + maxNeighbours(ii, jj, 1),
