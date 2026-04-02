@@ -13,15 +13,11 @@ function maximumAmount(coins: number[][]): number {
 
     for (let ii = M - 1; ii >= 0; ii--) {
         for (let jj = N - 1; jj >= 0; jj--) {
-            dp[ii][jj][2] = coins[ii][jj] + maxNeighbours(ii, jj, 2);
-            dp[ii][jj][1] = Math.max(
-                coins[ii][jj] + maxNeighbours(ii, jj, 1),
-                maxNeighbours(ii, jj, 2)
-            );
-            dp[ii][jj][0] = Math.max(
-                coins[ii][jj] + maxNeighbours(ii, jj, 0),
-                maxNeighbours(ii, jj, 1)
-            );
+            const maxN2 = maxNeighbours(ii, jj, 2);
+            const maxN1 = maxNeighbours(ii, jj, 1);
+            dp[ii][jj][2] = coins[ii][jj] + maxN2;
+            dp[ii][jj][1] = Math.max(coins[ii][jj] + maxN1, maxN2);
+            dp[ii][jj][0] = Math.max(coins[ii][jj] + maxNeighbours(ii, jj, 0), maxN1);
         }
     }
 
