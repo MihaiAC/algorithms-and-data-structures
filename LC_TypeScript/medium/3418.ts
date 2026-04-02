@@ -2,26 +2,31 @@ import assert from "node:assert";
 
 function maximumAmount(coins: number[][]): number {
     const [M, N] = [coins.length, coins[0].length];
-    const dp = Array.from({ length: M + 1 }, () =>
-        Array.from({ length: N + 1 }, () => Array.from({ length: 3 }, () => -Infinity))
+    let next = Array.from({ length: N + 1 }, () =>
+        Array.from({ length: 3 }, () => -Infinity)
+    );
+    let curr = Array.from({ length: N + 1 }, () =>
+        Array.from({ length: 3 }, () => -Infinity)
     );
 
-    const maxNeighbours = (ii: number, jj: number, kk: number): number => {
-        const max = Math.max(dp[ii][jj + 1][kk], dp[ii + 1][jj][kk]);
+    const maxNeighbours = (jj: number, kk: number): number => {
+        const max = Math.max(curr[jj + 1][kk], next[jj][kk]);
         return max !== -Infinity ? max : 0;
     };
 
     for (let ii = M - 1; ii >= 0; ii--) {
         for (let jj = N - 1; jj >= 0; jj--) {
-            const maxN2 = maxNeighbours(ii, jj, 2);
-            const maxN1 = maxNeighbours(ii, jj, 1);
-            dp[ii][jj][2] = coins[ii][jj] + maxN2;
-            dp[ii][jj][1] = Math.max(coins[ii][jj] + maxN1, maxN2);
-            dp[ii][jj][0] = Math.max(coins[ii][jj] + maxNeighbours(ii, jj, 0), maxN1);
+            const maxN2 = maxNeighbours(jj, 2);
+            const maxN1 = maxNeighbours(jj, 1);
+
+            curr[jj][2] = coins[ii][jj] + maxN2;
+            curr[jj][1] = Math.max(coins[ii][jj] + maxN1, maxN2);
+            curr[jj][0] = Math.max(coins[ii][jj] + maxNeighbours(jj, 0), maxN1);
         }
+        [curr, next] = [next, curr];
     }
 
-    return dp[0][0][0];
+    return next[0][0];
 }
 
 assert.equal(
