@@ -2,24 +2,13 @@ import assert from "node:assert";
 
 function maximumAmount(coins: number[][]): number {
     const [M, N] = [coins.length, coins[0].length];
-    const dp = Array.from({ length: M }, () =>
-        Array.from({ length: N }, () => Array.from({ length: 3 }, () => -Infinity))
+    const dp = Array.from({ length: M + 1 }, () =>
+        Array.from({ length: N + 1 }, () => Array.from({ length: 3 }, () => -Infinity))
     );
 
-    const withinBounds = (ii: number, jj: number): boolean =>
-        ii >= 0 && ii < M && jj >= 0 && jj < N;
-
-    const safeGet = (ii: number, jj: number, kk: number): number | undefined =>
-        withinBounds(ii, jj) ? dp[ii][jj][kk] : undefined;
-
     const maxNeighbours = (ii: number, jj: number, kk: number): number => {
-        const right = safeGet(ii, jj + 1, kk);
-        const down = safeGet(ii + 1, jj, kk);
-
-        if (right !== undefined && down !== undefined) return Math.max(right, down);
-        else if (right !== undefined) return right;
-        else if (down !== undefined) return down;
-        return 0;
+        const max = Math.max(dp[ii][jj + 1][kk], dp[ii + 1][jj][kk]);
+        return max !== -Infinity ? max : 0;
     };
 
     for (let kk = 2; kk >= 0; kk--) {
