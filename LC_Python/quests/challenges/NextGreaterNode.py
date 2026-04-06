@@ -1,5 +1,4 @@
 from typing import Optional, List
-from heapq import heappush, heappop
 
 
 class ListNode:
@@ -10,18 +9,18 @@ class ListNode:
 
 class Solution:
     def nextLargerNodes(self, head: Optional[ListNode]) -> List[int]:
-        heap = []
         currNode = head
         ans = []
+        monoStack = []
 
         while currNode is not None:
             currVal = currNode.val
 
-            while len(heap) > 0 and heap[0][0] < currVal:
-                _, idx = heappop(heap)
+            while len(monoStack) > 0 and monoStack[-1][0] < currVal:
+                _, idx = monoStack.pop()
                 ans[idx] = currVal
 
-            heappush(heap, (currVal, len(ans)))
+            monoStack.append((currVal, len(ans)))
             ans.append(0)
             currNode = currNode.next
 
