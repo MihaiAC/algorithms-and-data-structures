@@ -19,6 +19,7 @@ const kaiten: Record<Direction, Direction> = {
 class Robot {
     M: number;
     N: number;
+    perimeter: number;
     cDir: Direction = "East";
     x: number = 0;
     y: number = 0;
@@ -26,6 +27,7 @@ class Robot {
     constructor(width: number, height: number) {
         this.M = width;
         this.N = height;
+        this.perimeter = 2 * (width + height - 2);
     }
 
     withinBounds(x: number, y: number): boolean {
@@ -40,7 +42,25 @@ class Robot {
         return Math.min(this.N - 1, Math.max(0, y));
     }
 
+    onEdge(): boolean {
+        return (
+            this.x === 0 || this.y === 0 || this.x === this.M - 1 || this.y === this.N - 1
+        );
+    }
+
     step(steps: number): void {
+        if (this.onEdge() && steps > this.perimeter) {
+            steps %= this.perimeter;
+            if (steps === 0) {
+                if (this.x === 0 && this.y === 0) this.cDir = "South";
+                else if (this.x === this.M - 1 && this.y === 0) this.cDir = "East";
+                else if (this.x === this.M - 1 && this.y === this.N - 1)
+                    this.cDir = "North";
+                else if (this.x === 0 && this.y === this.N - 1) this.cDir = "West";
+                return;
+            }
+        }
+
         const [dx, dy] = delta[this.cDir];
         let [nx, ny] = [this.x + dx * steps, this.y + dy * steps];
 
@@ -53,7 +73,7 @@ class Robot {
         [nx, ny] = [this.clampX(nx), this.clampY(ny)];
 
         // Subtract the number of steps taken to reach the edge.
-        steps -= Math.abs(this.x - nx) - Math.abs(this.y - ny);
+        steps -= Math.abs(this.x - nx) + Math.abs(this.y - ny);
 
         // Update robot position and direction.
         [this.x, this.y] = [nx, ny];
