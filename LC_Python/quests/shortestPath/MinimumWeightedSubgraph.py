@@ -1,28 +1,38 @@
-from typing import List
+from typing import List, Dict
+from collections import defaultdict
+from heapq import heappush, heappop
 
 
 class Solution:
     def minimumWeight(
         self, n: int, edges: List[List[int]], src1: int, src2: int, dest: int
     ) -> int:
-        # Floyd-Warshall (might be too slow)
-        dist = [[float("inf") for _ in range(n)] for _ in range(n)]
+        forward = defaultdict(list)
+        backward = defaultdict(list)
 
-        for x in range(n):
-            dist[x][x] = 0
+        for u, v, w in edges:
+            forward[u].append((w, v))
+            backward[v].append((w, u))
 
-        for x, y, w in edges:
-            dist[x][y] = min(dist[x][y], w)
+        def min_dist(graph: Dict[int, List[int]], source: int) -> int:
+            dists = [float("inf")] * n
+            heap = [(0, source)]
 
-        for k in range(n):
-            for x in range(n):
-                for y in range(n):
-                    if dist[x][k] + dist[k][y] < dist[x][y]:
-                        dist[x][y] = dist[x][k] + dist[k][y]
+            while len(heap) > 0:
+                curr_time, node = heappop(heap)
+                if dists[node] == float("inf"):
+                    dists[node] = curr_time
+                    for time, nxt in graph[node]:
+                        heappush(heap, (curr_time + time, nxt))
+            return dists
+
+        d1 = min_dist(forward, src1)
+        d2 = min_dist(forward, src2)
+        dd = min_dist(backward, dest)
 
         ans = float("inf")
         for x in range(n):
-            ans = min(ans, dist[src1][x] + dist[src2][x] + dist[x][dest])
+            ans = min(ans, d1[x] + d2[x] + dd[x])
 
         return ans if ans != float("inf") else -1
 
