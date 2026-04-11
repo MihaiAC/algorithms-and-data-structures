@@ -22,15 +22,18 @@ class Solution:
             "red" if n in clique else "steelblue" for n in self.graph.nodes()
         ]
         pos = nx.spring_layout(self.graph, seed=42)
+        fig, ax = plt.subplots(figsize=(1200 / 96, 800 / 96), dpi=96)
+        fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
         nx.draw(
             self.graph,
             pos,
+            ax=ax,
             node_color=node_colors,
             with_labels=True,
             node_size=200,
             font_size=7,
         )
-        plt.title("Max clique nodes in red")
+        ax.set_title("Max clique nodes in red")
         plt.show()
 
 
