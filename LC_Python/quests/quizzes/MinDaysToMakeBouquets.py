@@ -31,9 +31,9 @@ class Solution:
 
         for jj in range(1, m + 1):
             curr = [float("inf") for _ in range(n)]
-            if jj == 1:
-                curr[k - 1] = rollingMax[k - 1]
-            for ii in range(k, n):
+            start = jj * k - 1
+            curr[start] = max(rollingMax[start], prev[start - k])
+            for ii in range(start + 1, n):
                 curr[ii] = min(
                     curr[ii - 1],
                     max(
