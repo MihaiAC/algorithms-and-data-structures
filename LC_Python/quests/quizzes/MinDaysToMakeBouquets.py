@@ -29,21 +29,26 @@ class Solution:
         prev = [0 for _ in range(n)]
         rollingMax = createRollingMax(bloomDay, k)
 
+        def fetchPrev(jj: int, idx: int):
+            if jj > 1:
+                if idx < (jj - 1) * k - 1:
+                    return float("inf")
+                else:
+                    return prev[idx]
+            return 0
+
+        curr = [float("inf") for _ in range(n)]
         for jj in range(1, m + 1):
-            curr = [float("inf") for _ in range(n)]
             start = jj * k - 1
-            curr[start] = max(rollingMax[start], prev[start - k])
+            curr[start] = max(rollingMax[start], fetchPrev(jj, start - k))
             for ii in range(start + 1, n):
                 curr[ii] = min(
                     curr[ii - 1],
-                    max(
-                        rollingMax[ii],
-                        prev[ii - k],
-                    ),
+                    max(rollingMax[ii], fetchPrev(jj, ii - k)),
                 )
-            prev = curr
+            prev, curr = curr, prev
 
-        return min(prev)
+        return min(prev[(m * k - 1) :])
 
 
 sol = Solution()
