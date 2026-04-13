@@ -1,22 +1,20 @@
 from typing import List
-from heapq import heappush, heappop
 
 
-def createRollingMax(days: int, k: int) -> int:
-    n = len(days)
+def countBouquets(bloomDay: List[int], currDay: int, k: int) -> int:
+    count = 0
+    streak = 0
 
-    # rollingMax[idx] = maximum value from max(0, idx-k+1) to days[idx].
-    rollingMax = []
+    for day in bloomDay:
+        if day <= currDay:
+            streak += 1
+            if streak == k:
+                count += 1
+                streak = 0
+        else:
+            streak = 0
 
-    heap = []
-
-    for idx in range(n):
-        heappush(heap, (-days[idx], idx))
-        while heap[0][1] < max(0, idx - k + 1):
-            heappop(heap)
-        rollingMax.append(-heap[0][0])
-
-    return rollingMax
+    return count
 
 
 class Solution:
@@ -26,29 +24,15 @@ class Solution:
         if n < m * k:
             return -1
 
-        prev = [0 for _ in range(n)]
-        rollingMax = createRollingMax(bloomDay, k)
+        left, right = 0, max(bloomDay)
+        while left < right:
+            mid = (left + right) // 2
+            if countBouquets(bloomDay, mid, k) >= m:
+                right = mid
+            else:
+                left = mid + 1
 
-        def fetchPrev(jj: int, idx: int):
-            if jj > 1:
-                if idx < (jj - 1) * k - 1:
-                    return float("inf")
-                else:
-                    return prev[idx]
-            return 0
-
-        curr = [float("inf") for _ in range(n)]
-        for jj in range(1, m + 1):
-            start = jj * k - 1
-            curr[start] = max(rollingMax[start], fetchPrev(jj, start - k))
-            for ii in range(start + 1, n):
-                curr[ii] = min(
-                    curr[ii - 1],
-                    max(rollingMax[ii], fetchPrev(jj, ii - k)),
-                )
-            prev, curr = curr, prev
-
-        return min(prev[(m * k - 1) :])
+        return left
 
 
 sol = Solution()
