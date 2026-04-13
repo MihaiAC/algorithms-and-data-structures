@@ -8,59 +8,34 @@ class ListNode:
         self.val = val
         self.next = next
 
-    def __lt__(self, other: ListNode):
-        return self.val < other.val
-
-    @staticmethod
-    def from_list(nums: int) -> Optional[ListNode]:
-        if len(nums) == 0:
-            return None
-
-        head = ListNode(nums[0])
-        curr = head
-        for num in nums[1:]:
-            curr.next = ListNode(num)
-            curr = curr.next
-
-        return head
-
-    def to_list(self) -> List[int]:
-        nums = []
-
-        head = self
-        while head is not None:
-            nums.append(head.val)
-            head = head.next
-
-        return nums
-
 
 class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         root = None
         curr = None
         heap = []
-        for node in lists:
+        for idx, node in enumerate(lists):
             if node is not None:
-                heappush(heap, node)
+                heappush(heap, (node.val, idx))
 
         while len(heap) > 0:
-            curr_node = heappop(heap)
-            if curr_node.next is not None:
-                heappush(heap, curr_node.next)
+            curr_val, node_idx = heappop(heap)
+            if lists[node_idx].next is not None:
+                lists[node_idx] = lists[node_idx].next
+                heappush(heap, (lists[node_idx].val, node_idx))
 
             if root is not None:
-                curr.next = ListNode(curr_node.val)
+                curr.next = ListNode(curr_val)
                 curr = curr.next
             else:
-                root = ListNode(curr_node.val)
+                root = ListNode(curr_val)
                 curr = root
 
         return root
 
 
-sol = Solution()
-l1 = ListNode.from_list([1, 4, 5])
-l2 = ListNode.from_list([1, 3, 4])
-l3 = ListNode.from_list([2, 6])
-print(sol.mergeKLists([l1, l2, l3]).to_list())
+# sol = Solution()
+# l1 = ListNode.from_list([1, 4, 5])
+# l2 = ListNode.from_list([1, 3, 4])
+# l3 = ListNode.from_list([2, 6])
+# print(sol.mergeKLists([l1, l2, l3]).to_list())
