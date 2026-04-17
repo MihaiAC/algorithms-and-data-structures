@@ -2,13 +2,6 @@ from typing import List
 from collections import defaultdict
 
 
-def reverseNum(num: int) -> int:
-    """We know num != 0."""
-    while num % 10 == 0:
-        num = num // 10
-    return int("".join(str(num)[::-1]))
-
-
 class Solution:
     def minMirrorPairDistance(self, nums: List[int]) -> int:
         N = len(nums)
@@ -17,7 +10,7 @@ class Solution:
 
         for idx in range(N - 1, -1, -1):
             num = nums[idx]
-            reverse_num = reverseNum(num)
+            reverse_num = int(str(num)[::-1])
             if reverse_num in closestIdx:
                 min_dist = min(min_dist, closestIdx[reverse_num] - idx)
             closestIdx[num] = idx
