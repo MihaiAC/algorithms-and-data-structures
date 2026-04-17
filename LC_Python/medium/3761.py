@@ -3,10 +3,10 @@ from collections import defaultdict
 
 
 def reverseNum(num: int) -> int:
-    str_num = list(str(num))
-    while len(str_num) > 0 and str_num[-1] == "0":
-        str_num.pop()
-    return int("".join(str_num[::-1]))
+    """We know num != 0."""
+    while num % 10 == 0:
+        num = num // 10
+    return int("".join(str(num)[::-1]))
 
 
 class Solution:
