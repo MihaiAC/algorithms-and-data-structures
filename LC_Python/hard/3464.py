@@ -24,7 +24,7 @@ class Solution:
         arr.sort()
 
         def is_possible(min_dist: int) -> bool:
-            for start in arr:
+            for start in arr[: bisect_left(arr, arr[0] + min_dist)]:
                 left = start
                 # Encodes the wrap-around - useful only if start is on the first side (I think)
                 right = start + 4 * side - min_dist
