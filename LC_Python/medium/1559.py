@@ -25,7 +25,11 @@ class Solution:
 
                     for dx, dy in DELTAS:
                         nx, ny = cx + dx, cy + dy
-                        if within_bounds(nx, ny) and grid[nx][ny] == grid[cx][cy] and (nx, ny) != (prev_x, prev_y):
+                        if (
+                            within_bounds(nx, ny)
+                            and grid[nx][ny] == grid[cx][cy]
+                            and (nx, ny) != (prev_x, prev_y)
+                        ):
                             if (nx, ny) in visited:
                                 return True
 
