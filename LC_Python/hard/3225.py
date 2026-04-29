@@ -12,33 +12,47 @@ class Solution:
             for jj in range(N):
                 prefix_sum[ii][jj] = grid[ii - 1][jj] + prefix_sum[ii - 1][jj]
 
+        suffix_max = [[0] * (N + 1) for _ in range(N + 1)]
+        prefix_max = [[0] * (N + 1) for _ in range(N + 1)]
+
         for col in range(1, N):
+            for last_h in range(N + 1):
+                suffix_max[last_h][N] = dp[col - 1][last_h][N]
+                for penultimate_h in range(N - 1, -1, -1):
+                    suffix_max[last_h][penultimate_h] = max(
+                        suffix_max[last_h][penultimate_h + 1],
+                        dp[col - 1][last_h][penultimate_h],
+                    )
+
+            for last_h in range(N + 1):
+                prefix_max[last_h][0] = dp[col - 1][last_h][0]
+                for penultimate_h in range(1, N + 1):
+                    penalty = max(
+                        0,
+                        prefix_sum[penultimate_h][col - 1]
+                        - prefix_sum[last_h][col - 1],
+                    )
+                    prefix_max[last_h][penultimate_h] = max(
+                        prefix_max[last_h][penultimate_h - 1],
+                        dp[col - 1][last_h][penultimate_h] - penalty,
+                    )
+
             for curr_h in range(N + 1):
-                # Can split this if + for into two for to reduce nesting.
-                for last_h in range(N + 1):
-                    if curr_h <= last_h:
-                        curr_max = 0
-                        # TODO: This needs to be memoized as well.
-                        for penultimate_h in range(N + 1):
-                            curr_max = max(curr_max, dp[col - 1][last_h][penultimate_h])
-                        dp[col][curr_h][last_h] = (
-                            curr_max
-                            + prefix_sum[last_h][col]
-                            - prefix_sum[curr_h][col]
-                        )
-                    else:
-                        curr_max = 0
-                        for penultimate_h in range(N + 1):
-                            curr_max = max(
-                                curr_max,
-                                dp[col - 1][last_h][penultimate_h]
-                                + max(
-                                    0,
-                                    prefix_sum[curr_h][col - 1]
-                                    - prefix_sum[max(last_h, penultimate_h)][col - 1],
-                                ),
-                            )
-                        dp[col][curr_h][last_h] = curr_max
+                for last_h in range(curr_h, N + 1):
+                    dp[col][curr_h][last_h] = (
+                        suffix_max[last_h][0]
+                        + prefix_sum[last_h][col]
+                        - prefix_sum[curr_h][col]
+                    )
+
+                for last_h in range(curr_h):
+                    extra_score = (
+                        prefix_sum[curr_h][col - 1] - prefix_sum[last_h][col - 1]
+                    )
+                    dp[col][curr_h][last_h] = max(
+                        suffix_max[last_h][curr_h],
+                        prefix_max[last_h][curr_h] + extra_score,
+                    )
 
         ans = 0
         for penultimate_h in range(N + 1):
