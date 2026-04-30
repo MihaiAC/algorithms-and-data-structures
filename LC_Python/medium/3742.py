@@ -14,16 +14,18 @@ class Solution:
                 curr_cost = 0 if grid[ii][jj] == 0 else 1
                 curr_row = {}
 
-                if jj > 0:
-                    for c, prev_max in dp[jj - 1].items():
-                        if c + curr_cost <= k:
-                            curr_row[c + curr_cost] = grid[ii][jj] + prev_max
+                left = dp[jj - 1] if jj > 0 else {}
+                merged = {
+                    prev_cost: max(left.get(prev_cost, -1), prev_row.get(prev_cost, -1))
+                    for prev_cost in left.keys() | prev_row.keys()
+                }
 
-                for c, prev_max in prev_row.items():
-                    if c + curr_cost <= k:
-                        curr_row[c + curr_cost] = max(
-                            grid[ii][jj] + prev_max, curr_row.get(c + curr_cost, -1)
-                        )
+                if curr_cost == 0:
+                    curr_row = merged
+                else:
+                    for prev_cost, prev_max in merged.items():
+                        if prev_cost + 1 <= k:
+                            curr_row[prev_cost + 1] = grid[ii][jj] + prev_max
 
                 dp[jj] = curr_row
 
