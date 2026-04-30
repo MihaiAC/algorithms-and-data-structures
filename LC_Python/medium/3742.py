@@ -11,11 +11,8 @@ class Solution:
             for jj in range(N):
                 prev_row = dp[jj].copy()
                 curr_cost = 0 if grid[ii][jj] == 0 else 1
+                curr_row = {}
                 for c in range(k + 1):
-                    if c < curr_cost and c in dp[jj]:
-                        del dp[jj][c]
-                        continue
-
                     prev_max = None
 
                     if c - curr_cost in prev_row:
@@ -28,9 +25,8 @@ class Solution:
                             prev_max = max(prev_max, dp[jj - 1][c - curr_cost])
 
                     if prev_max is not None:
-                        dp[jj][c] = grid[ii][jj] + prev_max
-                    elif c in dp[jj]:
-                        del dp[jj][c]
+                        curr_row[c] = grid[ii][jj] + prev_max
+                dp[jj] = curr_row
 
         scores = dp[N - 1].values()
         return -1 if len(scores) == 0 else max(scores)
