@@ -2,26 +2,20 @@ from typing import List
 from collections import defaultdict, deque
 
 MAXN = 10**6 + 1
-
-is_prime = [True] * MAXN
-is_prime[0] = False
-is_prime[1] = False
-
+prime_factors = [[] for _ in range(MAXN)]
 for num in range(2, MAXN):
-    if is_prime[num]:
+    if len(prime_factors[num]) == 0:
+        prime_factors[num].append(num)
         for mult in range(2 * num, MAXN, num):
-            is_prime[mult] = False
+            prime_factors[mult].append(num)
 
 
 class Solution:
     def minJumps(self, nums: List[int]) -> int:
-        primes = set([x for x in nums if is_prime[x]])
-
         buckets = defaultdict(list)
         for idx, num in enumerate(nums):
-            for prime in primes:
-                if num % prime == 0:
-                    buckets[prime].append(idx)
+            for factor in prime_factors[num]:
+                buckets[factor].append(idx)
 
         N = len(nums)
         jumps = 0
@@ -50,7 +44,7 @@ class Solution:
 
                 # Enqueue multiples if nums[curr_idx] is a prime.
                 num = nums[curr_idx]
-                if is_prime[num]:
+                if len(prime_factors[num]) == 1:
                     for multiple in buckets[num]:
                         if not visited[multiple]:
                             queue.appendleft(multiple)
