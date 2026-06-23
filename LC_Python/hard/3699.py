@@ -1,37 +1,26 @@
-from functools import cache
+from itertools import accumulate
 
 MODN = 10**9 + 7
 
 
 class Solution:
     def zigZagArrays(self, n: int, left: int, right: int) -> int:
+        # left..right is same as 0..right-left+1
+        m = right - left + 1
 
-        @cache
-        def dp(idx, monotonicity, curr_val):
-            if idx == 0:
-                return 1
-            if monotonicity == -1:
-                return (
-                    sum(
-                        dp(idx - 1, 1, next_val)
-                        for next_val in range(curr_val + 1, right + 1)
-                    )
-                    % MODN
-                )
-            else:
-                return (
-                    sum(dp(idx - 1, -1, next_val) for next_val in range(left, curr_val))
-                    % MODN
-                )
+        dp_prev_desc = [1] * m
+        dp_prev_inc = [1] * m
 
-        return (
-            sum(
-                dp(n - 1, monotonicity, v)
-                for monotonicity in (1, -1)
-                for v in range(left, right + 1)
-            )
-            % MODN
-        )
+        for _ in range(n - 1):
+            sum_prev_desc = list(accumulate(dp_prev_desc, initial=0))
+            sum_prev_inc = list(accumulate(dp_prev_inc, initial=0))
+
+            dp_prev_desc = [x % MODN for x in sum_prev_inc[:-1]]
+
+            sum_prev_desc_0_to_m = sum_prev_desc[-1]
+            dp_prev_inc = [(sum_prev_desc_0_to_m - x) % MODN for x in sum_prev_desc[1:]]
+
+        return (sum(dp_prev_desc) + sum(dp_prev_inc)) % MODN
 
 
 sol = Solution()
