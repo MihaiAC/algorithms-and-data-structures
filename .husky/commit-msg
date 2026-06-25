@@ -1,9 +1,9 @@
 msg=$(cat "$1")
 
-regex="^\[(Python|TS|Config)\] .+"
+regex="^\[(Python|TS|Config|Rust)\] .+"
 
 if ! echo "$msg" | grep -Eq "$regex"; then
   echo "Invalid commit message."
-  echo "Expected: [Python] ... | [TS] ... | [Config] ..."
+  echo "Expected: [Python] ... | [TS] ... | [Config] ... | [Rust] ..."
   exit 1
 fi
