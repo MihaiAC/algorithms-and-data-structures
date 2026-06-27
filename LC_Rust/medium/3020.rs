@@ -15,7 +15,7 @@ impl Solution {
         let mut ans: i32 = 1;
 
         // Handle 1s.
-        let mut ones_len: i32 = counts.get(&1).copied().unwrap();
+        let mut ones_len: i32 = counts.get(&1).copied().unwrap_or(0);
         if ones_len % 2 == 0 {
             ones_len -= 1;
         }
@@ -51,5 +51,6 @@ impl Solution {
 pub fn main() {
     assert_eq!(Solution::maximum_length(vec![5, 4, 1, 2, 2]), 3);
     assert_eq!(Solution::maximum_length(vec![1, 3, 2, 4]), 1);
+    assert_eq!(Solution::maximum_length(vec![4, 36, 81, 16, 25]), 1);
     println!("ok");
 }
