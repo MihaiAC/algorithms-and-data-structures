@@ -20,7 +20,7 @@ fn main() {
             if path.extension().is_some_and(|ext| ext == "rs") {
                 let stem = path.file_stem().unwrap().to_str().unwrap().to_owned();
                 let stub_path = format!("src/bin/{stem}.rs");
-                let content = format!("include!(\"../../{difficulty}/{stem}.rs\");\n");
+                let content = format!("#[path = \"../../{difficulty}/{stem}.rs\"]\nmod solution;\nfn main() {{ solution::main(); }}\n");
                 if fs::read_to_string(&stub_path).ok().as_deref() != Some(&content) {
                     fs::write(&stub_path, &content).unwrap();
                 }
