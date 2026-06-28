@@ -5,7 +5,10 @@ use std::collections::HashMap;
 struct Solution;
 
 impl Solution {
+    #[allow(clippy::needless_pass_by_value)]
     pub fn maximum_length(nums: Vec<i32>) -> i32 {
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_possible_wrap)]
         let counts: HashMap<&i32, i32> = nums
             .iter()
             .counts()
