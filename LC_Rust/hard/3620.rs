@@ -1,5 +1,5 @@
 use std::cmp::Reverse;
-use std::collections::{BinaryHeap, HashMap};
+use std::collections::{BinaryHeap, HashMap, HashSet};
 
 struct Solution;
 
@@ -52,6 +52,7 @@ impl Solution {
         min_weight: i32,
         n: i32,
     ) -> bool {
+        let mut visited: HashSet<i32> = HashSet::new();
         let mut heap: BinaryHeap<(Reverse<i64>, i32)> = BinaryHeap::new();
         heap.push((Reverse(0), 0));
 
@@ -60,6 +61,10 @@ impl Solution {
 
             if curr_node == (n - 1) {
                 return true;
+            }
+
+            if !visited.insert(curr_node) {
+                continue;
             }
 
             if let Some(adj) = neighbors.get(&curr_node) {
