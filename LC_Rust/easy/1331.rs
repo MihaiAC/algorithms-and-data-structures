@@ -1,36 +1,15 @@
-use std::cmp::Ordering;
-use std::collections::HashSet;
-
 struct Solution;
 
 impl Solution {
-    pub fn find_idx(num: i32, sorted_arr: &[i32]) -> i32 {
-        let mut left = 0;
-        let mut right = sorted_arr.len() - 1;
-        let mut middle;
-
-        while left < right {
-            middle = left.midpoint(right);
-            match num.cmp(&sorted_arr[middle]) {
-                Ordering::Equal => return i32::try_from(middle).unwrap(),
-                Ordering::Greater => left = middle + 1,
-                Ordering::Less => right = middle,
-            }
-        }
-
-        i32::try_from(left).unwrap()
-    }
-
     pub fn array_rank_transform(arr: Vec<i32>) -> Vec<i32> {
-        let mut sorted_arr: Vec<i32> = (arr.iter().copied().collect::<HashSet<i32>>())
-            .into_iter()
-            .collect();
+        let mut sorted_arr = arr.clone();
         sorted_arr.sort_unstable();
+        sorted_arr.dedup();
 
-        let mut ans = vec![];
+        let mut ans: Vec<i32> = Vec::with_capacity(arr.len());
 
         for num in arr {
-            ans.push(Solution::find_idx(num, &sorted_arr) + 1);
+            ans.push(i32::try_from(sorted_arr.binary_search(&num).unwrap() + 1).unwrap());
         }
 
         ans
