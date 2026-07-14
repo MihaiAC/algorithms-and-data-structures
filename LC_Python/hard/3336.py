@@ -6,34 +6,36 @@ MODN = 10**9 + 7
 
 class Solution:
     def subsequencePairCount(self, nums: List[int]) -> int:
-        N = len(nums)
         M = max(nums)
 
-        dp = [[[0] * (M + 1) for _ in range(M + 1)] for _ in range(N + 1)]
-        dp[0][0][0] = 1
+        dp = [[0] * (M + 1) for _ in range(M + 1)]
+        dp[0][0] = 1
 
-        for idx in range(N):
+        for num in nums:
+            next_dp = [[0] * (M + 1) for _ in range(M + 1)]
             for left_gcd in range(M + 1):
+                _left_gcd = gcd(left_gcd, num)
                 for right_gcd in range(M + 1):
-                    curr = dp[idx][left_gcd][right_gcd]
+                    curr = dp[left_gcd][right_gcd]
 
-                    dp[idx + 1][left_gcd][right_gcd] = (
-                        dp[idx + 1][left_gcd][right_gcd] + curr
+                    next_dp[left_gcd][right_gcd] = (
+                        next_dp[left_gcd][right_gcd] + curr
                     ) % MODN
 
-                    _left_gcd = gcd(left_gcd, nums[idx])
-                    dp[idx + 1][_left_gcd][right_gcd] = (
-                        dp[idx + 1][_left_gcd][right_gcd] + curr
+                    next_dp[_left_gcd][right_gcd] = (
+                        next_dp[_left_gcd][right_gcd] + curr
                     ) % MODN
 
-                    _right_gcd = gcd(right_gcd, nums[idx])
-                    dp[idx + 1][left_gcd][_right_gcd] = (
-                        dp[idx + 1][left_gcd][_right_gcd] + curr
+                    _right_gcd = gcd(right_gcd, num)
+                    next_dp[left_gcd][_right_gcd] = (
+                        next_dp[left_gcd][_right_gcd] + curr
                     ) % MODN
+
+            dp = next_dp
 
         ans = 0
         for common_gcd in range(1, M + 1):
-            ans = (ans + dp[N][common_gcd][common_gcd]) % MODN
+            ans = (ans + dp[common_gcd][common_gcd]) % MODN
 
         return ans
 
