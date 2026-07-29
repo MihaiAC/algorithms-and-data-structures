@@ -1,4 +1,19 @@
-from math import comb
+from functools import cache
+
+CAP = 10**9 + 1
+
+
+@cache
+def comb(n: int, m: int) -> int:
+    m = min(m, n - m)
+    result = 1
+
+    for idx in range(1, m + 1):
+        result = result * (n - idx + 1) // idx
+        if result > CAP:
+            return CAP
+
+    return result
 
 
 class Solution:
