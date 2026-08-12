@@ -5,11 +5,10 @@ from collections import defaultdict
 class Solution:
     def maxSubarrayLength(self, nums: List[int], k: int) -> int:
         left, right = 0, 0
-        N = len(nums)
         curr_window = defaultdict(int)
         max_len = 0
 
-        for right in range(N):
+        for right in range(len(nums)):
             curr_window[nums[right]] += 1
 
             while curr_window[nums[right]] > k:
