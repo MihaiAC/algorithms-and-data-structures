@@ -1,21 +1,21 @@
 from typing import List
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 class Solution:
     def maxSubarrayLength(self, nums: List[int], k: int) -> int:
-        left, right = 0, 0
+        window = deque()
         curr_window = defaultdict(int)
         max_len = 0
 
-        for right in range(len(nums)):
-            curr_window[nums[right]] += 1
+        for num in nums:
+            window.append(num)
+            curr_window[num] += 1
 
-            while curr_window[nums[right]] > k:
-                curr_window[nums[left]] -= 1
-                left += 1
+            while curr_window[num] > k:
+                curr_window[window.popleft()] -= 1
 
-            max_len = max(max_len, right - left + 1)
+            max_len = max(max_len, len(window))
 
         return max_len
 
