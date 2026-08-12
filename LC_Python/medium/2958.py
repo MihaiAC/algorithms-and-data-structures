@@ -11,17 +11,14 @@ class Solution:
 
         while True:
             # Expand window.
-            while right < N:
-                if curr_window[nums[right]] < k:
-                    curr_window[nums[right]] += 1
-                    right += 1
-                else:
-                    break
-
-            if right == N:
-                return max(max_len, right - left)
+            while right < N and curr_window[nums[right]] < k:
+                curr_window[nums[right]] += 1
+                right += 1
 
             max_len = max(max_len, right - left)
+
+            if right == N:
+                return max_len
 
             # Shrink window.
             while curr_window[nums[left]] < k:
@@ -30,8 +27,6 @@ class Solution:
 
             curr_window[nums[left]] -= 1
             left += 1
-
-        return max_len
 
 
 sol = Solution()
