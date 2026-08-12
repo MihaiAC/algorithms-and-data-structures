@@ -9,24 +9,16 @@ class Solution:
         curr_window = defaultdict(int)
         max_len = 0
 
-        while True:
-            # Expand window.
-            while right < N and curr_window[nums[right]] < k:
-                curr_window[nums[right]] += 1
-                right += 1
+        for right in range(N):
+            curr_window[nums[right]] += 1
 
-            max_len = max(max_len, right - left)
-
-            if right == N:
-                return max_len
-
-            # Shrink window.
-            while curr_window[nums[left]] < k:
+            while curr_window[nums[right]] > k:
                 curr_window[nums[left]] -= 1
                 left += 1
 
-            curr_window[nums[left]] -= 1
-            left += 1
+            max_len = max(max_len, right - left + 1)
+
+        return max_len
 
 
 sol = Solution()
