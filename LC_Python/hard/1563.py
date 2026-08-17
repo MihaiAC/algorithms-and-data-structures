@@ -1,5 +1,4 @@
 from typing import List
-from functools import cache
 
 
 class Solution:
@@ -8,34 +7,37 @@ class Solution:
         for stone in stones:
             cum_sum.append(cum_sum[-1] + stone)
 
-        @cache
-        def calc_max_stones(left: int, right: int) -> int:
-            if left == right:
-                return 0
+        N = len(stones)
+        max_stones = [[0] * N for _ in range(N)]
 
-            sum_right = cum_sum[right + 1] - cum_sum[left]
-            sum_left, curr_max = 0, 0
+        for width in range(1, N):
+            for left in range(N - width):
+                right = left + width
 
-            for idx in range(left, right):
-                sum_left += stones[idx]
-                sum_right -= stones[idx]
+                sum_right = cum_sum[right + 1] - cum_sum[left]
+                sum_left, curr_max = 0, 0
 
-                if sum_left < sum_right:
-                    curr_max = max(curr_max, calc_max_stones(left, idx) + sum_left)
-                elif sum_left > sum_right:
-                    curr_max = max(
-                        curr_max, calc_max_stones(idx + 1, right) + sum_right
-                    )
-                else:
-                    curr_max = max(
-                        curr_max,
-                        max(calc_max_stones(left, idx), calc_max_stones(idx + 1, right))
-                        + sum_left,
-                    )
+                for idx in range(left, right):
+                    sum_left += stones[idx]
+                    sum_right -= stones[idx]
 
-            return curr_max
+                    if sum_left < sum_right:
+                        curr_max = max(curr_max, max_stones[left][idx] + sum_left)
+                    elif sum_left > sum_right:
+                        curr_max = max(curr_max, max_stones[idx + 1][right] + sum_right)
+                    else:
+                        curr_max = max(
+                            curr_max,
+                            max(
+                                max_stones[left][idx],
+                                max_stones[idx + 1][right],
+                            )
+                            + sum_left,
+                        )
 
-        return calc_max_stones(0, len(stones) - 1)
+                max_stones[left][right] = curr_max
+
+        return max_stones[0][N - 1]
 
 
 sol = Solution()
