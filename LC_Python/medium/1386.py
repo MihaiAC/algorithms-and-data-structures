@@ -1,23 +1,30 @@
 from typing import List
+from collections import defaultdict
 
 layouts = [[2, 3, 4, 5], [6, 7, 8, 9], [4, 5, 6, 7]]
 
 
 class Solution:
     def maxNumberOfFamilies(self, n: int, reservedSeats: List[List[int]]) -> int:
-        reserved = set([(x[0], x[1]) for x in reservedSeats])
+        reserved = defaultdict(list)
+        for row, seat in reservedSeats:
+            reserved[row].append(seat)
 
         ans = 0
         for row in range(1, n + 1):
-            dx = 0
+            if row not in reserved:
+                ans += 2
+                continue
 
+            dx = 0
+            curr_row = reserved[row]
             for layout in layouts:
                 if layout[0] == 4 and dx > 0:
                     break
 
                 occupied = False
                 for seat in layout:
-                    if (row, seat) in reserved:
+                    if seat in curr_row:
                         occupied = True
                         break
                 if not occupied:
