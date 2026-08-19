@@ -11,7 +11,7 @@ class Solution:
             reserved[row].append(seat)
 
         ans = 0
-        for row in range(1, n + 1):
+        for row in reserved:
             if row not in reserved:
                 ans += 2
                 continue
@@ -32,7 +32,7 @@ class Solution:
 
             ans += dx
 
-        return ans
+        return ans + 2 * (n - len(reserved))
 
 
 sol = Solution()
