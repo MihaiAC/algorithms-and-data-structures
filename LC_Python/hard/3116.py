@@ -6,6 +6,17 @@ from bisect import bisect_left
 
 class Solution:
     def findKthSmallest(self, coins: List[int], k: int) -> int:
+        coins.sort()
+
+        if coins[0] == 1:
+            return k
+
+        no_dups = [coins[0]]
+        for coin in coins[1:]:
+            if all([coin % x != 0 for x in no_dups]):
+                no_dups.append(coin)
+        coins = no_dups
+
         N = len(coins)
 
         def count_gt_k(mid: int):
