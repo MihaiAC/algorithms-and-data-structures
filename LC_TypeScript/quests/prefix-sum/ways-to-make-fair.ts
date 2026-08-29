@@ -10,9 +10,10 @@ function waysToMakeFair(nums: number[]): number {
     let nWays = 0;
     let [currEvenSum, currOddSum] = [0, 0];
     for (let idx = 0; idx < nums.length; idx++) {
-        const [remEven, remOdd] = idx % 2 === 0
-            ? [evenSum - currEvenSum - nums[idx], oddSum - currOddSum]
-            : [evenSum - currEvenSum, oddSum - currOddSum - nums[idx]];
+        const [remEven, remOdd] =
+            idx % 2 === 0
+                ? [evenSum - currEvenSum - nums[idx], oddSum - currOddSum]
+                : [evenSum - currEvenSum, oddSum - currOddSum - nums[idx]];
 
         if (currEvenSum + remOdd === currOddSum + remEven) nWays += 1;
 

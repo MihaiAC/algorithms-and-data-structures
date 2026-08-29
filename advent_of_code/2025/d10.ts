@@ -18,24 +18,15 @@ function readInput(fileName: string): Machine[] {
         assert(chunks.length >= 3, `Expected more than 3 chunks on line: ${line}`);
 
         const target = chunks[0]!
-            .replaceAll(/[\[\]]/g, "")
+            .replaceAll(/[[\]]/g, "")
             .replaceAll(".", "0")
             .replaceAll("#", "1");
 
-        const joltReqs = chunks
-            .at(-1)!
-            .replaceAll(/[\{\}]/g, "")
-            .split(",")
-            .map(Number);
+        const joltReqs = chunks.at(-1)!.replaceAll(/[{}]/g, "").split(",").map(Number);
 
         const buttons = [];
         for (const chunk of chunks.slice(1, -1)) {
-            buttons.push(
-                chunk
-                    .replaceAll(/[\(\)]/g, "")
-                    .split(",")
-                    .map(Number)
-            );
+            buttons.push(chunk.replaceAll(/[()]/g, "").split(",").map(Number));
         }
 
         machines.push({

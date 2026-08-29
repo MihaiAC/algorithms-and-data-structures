@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-this-alias
 export class ListNode {
     val: number;
     next: ListNode | null;

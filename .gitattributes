@@ -1,0 +1,5 @@
+* text=auto
+
+# oxfmt is configured with endOfLine: "crlf"
+*.ts text eol=crlf
+*.tsx text eol=crlf
