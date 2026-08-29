@@ -7,5 +7,10 @@
     }
   ],
   "rust-analyzer.linkedProjects": ["LC_Rust/Cargo.toml"],
-  "rust-analyzer.check.command": "clippy"
+  "rust-analyzer.check.command": "clippy",
+  "editor.formatOnSave": true,
+  "oxc.fmt.experimental": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }
