@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": true,
+  "printWidth": 90,
+  "tabWidth": 4,
+  "trailingComma": "es5",
+  "endOfLine": "crlf",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "**/*.md",
+    "**/*.json",
+    "**/*.jsonc",
+    "**/*.toml",
+    "**/*.yml",
+    "**/*.yaml",
+    "**/*.css",
+    "**/*.html"
+  ]
+}
