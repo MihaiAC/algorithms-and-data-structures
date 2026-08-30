@@ -6,7 +6,7 @@
       "packageManager": "ms-python.python:pip"
     }
   ],
-  "rust-analyzer.linkedProjects": ["LC_Rust/Cargo.toml"],
+  "rust-analyzer.linkedProjects": ["Cargo.toml"],
   "rust-analyzer.check.command": "clippy",
   "editor.formatOnSave": true,
   "oxc.fmt.experimental": true,
