@@ -162,6 +162,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "theory"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "rand",
+ "regex",
+]
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"

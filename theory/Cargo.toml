@@ -1,0 +1,16 @@
+[package]
+name = "theory"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "gosper_hack"
+path = "gosper_hack.rs"
+
+[dependencies]
+itertools.workspace = true
+rand.workspace = true
+regex.workspace = true
+
+[lints]
+workspace = true
